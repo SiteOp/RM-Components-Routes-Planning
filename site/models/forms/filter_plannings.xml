@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+    <fields name="filter">
+      
+
+        <field name="building"
+              label=""
+              type="list"
+              filter="integer"
+              class="form-control"
+              onchange="this.form.submit();"
+              default="COM_ACT_SEARCH_FILTER_BUIDLING">
+                <option value="">COM_ROUTES_PLANNING_SEARCH_FILTER_BUILDING</option>
+                <option value="1">COM_ROUTES_PLANNING_SEARCH_FILTER_BUILDING_OPTION_1</option>
+                <option value="2">COM_ROUTES_PLANNING_SEARCH_FILTER_BUILDING_OPTION_2</option>
+       </field>
+       <field name="sector" 
+               type="sql"
+               default="*"
+               label="Sektoren"
+               sql_select="sector, id"
+               sql_from="#__act_sector"
+               sql_where="state = 1"
+               key_field="id"
+               value_field="sector"
+               class="form-control"
+               multiple="true"
+               filter="integer"
+               sql_filter="building"
+              >
+        </field>  
+       
+    </fields>
+</form>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<metadata>
+	<layout title="COM_ROUTES_PLANNING_TITLE_LIST_VIEW_PLANNINGS" option="View">
+        <message>
+                        <![CDATA[COM_ROUTES_PLANNING_TITLE_LIST_VIEW_PLANNINGS_DESC]]>
+        </message>
+	</layout>
+	
+</metadata>

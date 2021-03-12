@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="component" version="3.0" method="upgrade">
+    <name>com_routes_planning</name>
+    <creationDate>2021-03-07</creationDate>
+    <copyright>2021 Birgit Gebhard</copyright>
+    <license>GNU General Public License Version 2 oder später; siehe LICENSE.txt</license>
+    <author>Birgit Gebhard</author>
+    <authorEmail>info@routes-manager.de</authorEmail>
+    <authorUrl>https://www.routes-manager.de</authorUrl>
+    <version>CVS: 1.0.0</version>
+    <description>COM_ROUTES_PLANNING_XML_DESCRIPTION</description>
+    
+    <scriptfile>script.php</scriptfile>
+    
+    <install> <!-- Runs on install -->
+        <sql>
+            <file driver="mysql" charset="utf8">sql/install.mysql.utf8.sql</file>
+        </sql>
+    </install>
+    <update> <!-- Runs on update -->
+        <sql>
+            <file driver="mysql" charset="utf8">sql/update.mysql.utf8.sql</file>
+        </sql>
+    </update>
+    <uninstall> <!-- Runs on uninstall -->
+        <sql>
+            <file driver="mysql" charset="utf8">sql/uninstall.mysql.utf8.sql</file>
+        </sql>
+    </uninstall>
+
+    <files folder="site">
+        <filename>index.html</filename>
+        <filename>routes_planning.php</filename>
+        <filename>controller.php</filename>
+        <filename>router.php</filename>
+        <folder>views</folder>
+        <folder>models</folder>
+        <folder>controllers</folder>
+        <folder>helpers</folder>
+    </files>
+    <media destination="com_routes_planning" folder="media">
+        <folder>js</folder>
+        <folder>css</folder>
+    </media>
+    <languages folder="site/languages">
+        
+			<language tag="en-GB">en-GB/en-GB.com_routes_planning.ini</language>
+			<language tag="de-DE">de-DE/de-DE.com_routes_planning.ini</language>
+    </languages>
+    <updateservers>
+        <server type="extension" priority="1" name="RM Planung">https://update.site-optimierer.de/RM/Components/com_routes_planning/com_routes_planning.xml</server>
+    </updateservers>
+    <administration>
+        <menu>COM_ROUTES_PLANNING</menu>
+        <submenu>
+            
+			<menu link="option=com_routes_planning&amp;view=plannings" view="plannings" alt="Routes_planning/Plannings">COM_ROUTES_PLANNING_TITLE_PLANNINGS</menu>
+
+        </submenu>
+        <files folder="administrator">
+            <filename>access.xml</filename>
+            <filename>config.xml</filename>
+            <filename>controller.php</filename>
+            <filename>index.html</filename>
+            <filename>routes_planning.php</filename>
+            <folder>controllers</folder>
+            <folder>assets</folder>
+            <folder>helpers</folder>
+            <folder>models</folder>
+            <folder>sql</folder>
+            <folder>tables</folder>
+            <folder>views</folder>
+        </files>
+        <languages folder="administrator/languages">
+            
+			<language tag="en-GB">en-GB/en-GB.com_routes_planning.ini</language>
+			<language tag="en-GB">en-GB/en-GB.com_routes_planning.sys.ini</language>
+			<language tag="de-DE">de-DE/de-DE.com_routes_planning.ini</language>
+			<language tag="de-DE">de-DE/de-DE.com_routes_planning.sys.ini</language>
+        </languages>
+    </administration>
+    <config>
+        <fields name="params">
+            <fieldset name="component">
+                <field name="save_history" default="0" />
+            </fieldset>
+        </fields>
+    </config>
+    <plugins>
+        <plugin group="search" plugin="routes_planning"/>
+    </plugins>
+    
+</extension>
+<!-- Component built by the Joomla Component Creator -->
+<!-- http://www.component-creator.com/ -->
