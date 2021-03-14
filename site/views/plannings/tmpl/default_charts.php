@@ -9,8 +9,6 @@
 // No direct access
 defined('_JEXEC') or die;
 
-
-use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 
 // Erstelle Label für Grade 3.Grad usw (Grad wird innerhalb Charts hinzugefügt)
@@ -60,17 +58,6 @@ $soll_routes_data = json_encode([
 ]);
 
 ?> 
-
-<div class="row mt-3">
-    <div class="col">
-        <div class="card">
-            <div class="card-body">
-				<canvas id="bar-chart-grouped" width="" height="60"></canvas>
-            </div>
-        </div>
-    </div> 
- </div>
-
 <script>
 Chart.helpers.merge(Chart.defaults.global.plugins.datalabels, {
   align: 'end',
@@ -89,12 +76,12 @@ new Chart(document.getElementById("bar-chart-grouped"), {
   data: {
     labels:  <?php echo $label_grade; ?>,
     datasets: [{
-      label: "Soll",
+      label: "<?php echo Text::_('COM_ROUTES_PLANNING_SHOULD'); ?>",
       backgroundColor: "#98c920",
 		  data: <?php echo $soll_routes_data; ?>
     }, 
     {
-      label: "Ist",
+      label: "<?php echo Text::_('COM_ROUTES_PLANNING_IS'); ?>",
       backgroundColor: "#019abc",
       data: <?php echo $ist_routes_data; ?>
     }]

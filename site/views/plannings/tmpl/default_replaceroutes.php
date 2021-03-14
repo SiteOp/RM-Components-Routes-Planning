@@ -9,40 +9,31 @@
 // No direct access
 defined('_JEXEC') or die;
 
-
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
-use Joomla\CMS\Router\Route;
-use \Joomla\CMS\Uri\Uri;
-use Joomla\CMS\Layout\LayoutHelper;
-use Joomla\CMS\HTML\HTMLHelper;
-
 
 ?> 
 <div class="table-responsive">
     <table id="replaceroutes_table" class="table table-striped table-bordered" style="width:100%"  >
         <thead>
             <tr>
-                <th>Sektor</th> <?php // TODO ?>
-                <th>Linie</th>
-                <th>Name</th>
-                <th>Grad</th>
-                <th>Farbe</th>
+                <th><?php echo Text::_('COM_ROUTES_PLANNING_SECTOR'); ?></th>
+                <th><?php echo Text::_('COM_ROUTES_PLANNING_LINE'); ?></th>
+                <th><?php echo Text::_('COM_ROUTES_PLANNING_ROUTES_NAME'); ?></th>
+                <th><?php echo Text::_('COM_ROUTES_PLANNING_GRADE'); ?></th>
+                <th><?php echo Text::_('COM_ROUTES_PLANNING_ROUTES_COLOR'); ?></th>
             </tr>
         </thead>
         <tbody>
-            <?php foreach($this->replaceRoutes AS $routes) : ?>
+            <?php foreach($this->replaceRoutes AS $route) : ?>
                 <tr>
-                    <td><?php echo $routes->sector; ?></td>
-                    <td><?php echo $routes->line; ?></td>
-                    <td><?php echo $routes->name; ?></td>
-                    <td><?php echo $routes->uiaa; ?></td>
-                    <td><?php echo $routes->color; ?></td>
+                    <td><?php echo $route->sector; ?></td>
+                    <td><?php echo $route->line; ?></td>
+                    <td><?php echo $route->name; ?></td>
+                    <td class="text-center"><?php echo $route->uiaa; ?></td>
+                    <td><?php echo $route->color; ?></td>
                 </tr>
             <?php endforeach; ?>
         </tbody>
     </table>
 </div>
-
-
-
