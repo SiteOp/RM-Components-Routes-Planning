@@ -196,7 +196,7 @@ class Routes_planningModelPlannings extends \Joomla\CMS\MVC\Model\ListModel
         $db    = $this->getDbo();
         $query = $db->getQuery(true);
         
-        $query->select(array('r.name, l.line, s.sector, g.uiaa, c.color'))
+        $query->select(array('r.id, r.name, l.line, s.sector, g.uiaa, c.color, r.extend_sql'))
               ->from('#__act_route AS r')
 			  ->join('LEFT', '#__act_trigger_calc AS t ON t.id = r.id') // VIEW TABLE
 			  ->join('LEFT', '#__act_grade AS g ON g.id = t.calc_grade_round')

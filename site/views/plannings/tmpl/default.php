@@ -234,3 +234,5 @@ $(document).ready( function () {
 
 <?php // Das PHP und JS für das Chart ?>
 <?php echo $this->loadTemplate('charts'); ?>
+
+

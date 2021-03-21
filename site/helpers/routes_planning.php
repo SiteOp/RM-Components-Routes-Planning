@@ -68,6 +68,28 @@ class Routes_planningHelpersRoutes_planning
 		return explode(',', $db->loadResult());
 	}
 
+
+	/**
+	 * Hole den Namen des Griffherstellers
+	 *
+	 * @param   int     $id ID des Herstellers
+	 *
+	 * @return  string Name des Herstellers
+	 */
+	public static function getHoldManufacturer($id)
+	{
+		$db = Factory::getDbo();
+		$query = $db->getQuery(true);
+
+		$query->select('name')
+			->from('#__act_holds_manufacturer')
+			->where('id = ' . (int) $id);
+
+		$db->setQuery($query);
+		return $db->loadResult();
+	}
+	
+
     /**
      * Gets the edit permission for an user
      *
