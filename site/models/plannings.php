@@ -99,33 +99,33 @@ class Routes_planningModelPlannings extends \Joomla\CMS\MVC\Model\ListModel
 	{
 		$db	= $this->getDbo();
 		$query	= $db->getQuery(true);
-		$query->select(array('COUNT(CASE WHEN t.calc_grade = 10 then 1 ELSE NULL END) as  ist_grade_10',
-						     'COUNT(CASE WHEN t.calc_grade = 11 then 1 ELSE NULL END) as  ist_grade_11',
-							 'COUNT(CASE WHEN t.calc_grade = 12 then 1 ELSE NULL END) as  ist_grade_12',
-							 'COUNT(CASE WHEN t.calc_grade = 13 then 1 ELSE NULL END) as  ist_grade_13',
-							 'COUNT(CASE WHEN t.calc_grade = 14 then 1 ELSE NULL END) as  ist_grade_14',
-							 'COUNT(CASE WHEN t.calc_grade = 15 then 1 ELSE NULL END) as  ist_grade_15',
-							 'COUNT(CASE WHEN t.calc_grade = 16 then 1 ELSE NULL END) as  ist_grade_16',
-							 'COUNT(CASE WHEN t.calc_grade = 17 then 1 ELSE NULL END) as  ist_grade_17',
-							 'COUNT(CASE WHEN t.calc_grade = 18 then 1 ELSE NULL END) as  ist_grade_18',
-							 'COUNT(CASE WHEN t.calc_grade = 19 then 1 ELSE NULL END) as  ist_grade_19',
-							 'COUNT(CASE WHEN t.calc_grade = 20 then 1 ELSE NULL END) as  ist_grade_20',
-							 'COUNT(CASE WHEN t.calc_grade = 21 then 1 ELSE NULL END) as  ist_grade_21',
-							 'COUNT(CASE WHEN t.calc_grade = 22 then 1 ELSE NULL END) as  ist_grade_22',
-							 'COUNT(CASE WHEN t.calc_grade = 23 then 1 ELSE NULL END) as  ist_grade_23',
-							 'COUNT(CASE WHEN t.calc_grade = 24 then 1 ELSE NULL END) as  ist_grade_24',
-							 'COUNT(CASE WHEN t.calc_grade = 25 then 1 ELSE NULL END) as  ist_grade_25',
-							 'COUNT(CASE WHEN t.calc_grade = 26 then 1 ELSE NULL END) as  ist_grade_26',
-							 'COUNT(CASE WHEN t.calc_grade = 27 then 1 ELSE NULL END) as  ist_grade_27',
-							 'COUNT(CASE WHEN t.calc_grade = 28 then 1 ELSE NULL END) as  ist_grade_28',
-							 'COUNT(CASE WHEN t.calc_grade = 29 then 1 ELSE NULL END) as  ist_grade_29',
-							 'COUNT(CASE WHEN t.calc_grade = 30 then 1 ELSE NULL END) as  ist_grade_30',
-							 'COUNT(CASE WHEN t.calc_grade = 31 then 1 ELSE NULL END) as  ist_grade_31',
-							 'COUNT(CASE WHEN t.calc_grade = 32 then 1 ELSE NULL END) as  ist_grade_32',
-							 'COUNT(CASE WHEN t.calc_grade = 33 then 1 ELSE NULL END) as  ist_grade_33',
-							 'COUNT(CASE WHEN t.calc_grade = 34 then 1 ELSE NULL END) as  ist_grade_34',
-							 'COUNT(CASE WHEN t.calc_grade = 35 then 1 ELSE NULL END) as  ist_grade_35',
-							 'COUNT(CASE WHEN t.calc_grade = 36 then 1 ELSE NULL END) as  ist_grade_36',
+		$query->select(array('COUNT(CASE WHEN t.calc_grade_round = 10 then 1 ELSE NULL END) as  ist_grade_10',
+						     'COUNT(CASE WHEN t.calc_grade_round = 11 then 1 ELSE NULL END) as  ist_grade_11',
+							 'COUNT(CASE WHEN t.calc_grade_round = 12 then 1 ELSE NULL END) as  ist_grade_12',
+							 'COUNT(CASE WHEN t.calc_grade_round = 13 then 1 ELSE NULL END) as  ist_grade_13',
+							 'COUNT(CASE WHEN t.calc_grade_round = 14 then 1 ELSE NULL END) as  ist_grade_14',
+							 'COUNT(CASE WHEN t.calc_grade_round = 15 then 1 ELSE NULL END) as  ist_grade_15',
+							 'COUNT(CASE WHEN t.calc_grade_round = 16 then 1 ELSE NULL END) as  ist_grade_16',
+							 'COUNT(CASE WHEN t.calc_grade_round = 17 then 1 ELSE NULL END) as  ist_grade_17',
+							 'COUNT(CASE WHEN t.calc_grade_round = 18 then 1 ELSE NULL END) as  ist_grade_18',
+							 'COUNT(CASE WHEN t.calc_grade_round = 19 then 1 ELSE NULL END) as  ist_grade_19',
+							 'COUNT(CASE WHEN t.calc_grade_round = 20 then 1 ELSE NULL END) as  ist_grade_20',
+							 'COUNT(CASE WHEN t.calc_grade_round = 21 then 1 ELSE NULL END) as  ist_grade_21',
+							 'COUNT(CASE WHEN t.calc_grade_round = 22 then 1 ELSE NULL END) as  ist_grade_22',
+							 'COUNT(CASE WHEN t.calc_grade_round = 23 then 1 ELSE NULL END) as  ist_grade_23',
+							 'COUNT(CASE WHEN t.calc_grade_round = 24 then 1 ELSE NULL END) as  ist_grade_24',
+							 'COUNT(CASE WHEN t.calc_grade_round = 25 then 1 ELSE NULL END) as  ist_grade_25',
+							 'COUNT(CASE WHEN t.calc_grade_round = 26 then 1 ELSE NULL END) as  ist_grade_26',
+							 'COUNT(CASE WHEN t.calc_grade_round = 27 then 1 ELSE NULL END) as  ist_grade_27',
+							 'COUNT(CASE WHEN t.calc_grade_round = 28 then 1 ELSE NULL END) as  ist_grade_28',
+							 'COUNT(CASE WHEN t.calc_grade_round = 29 then 1 ELSE NULL END) as  ist_grade_29',
+							 'COUNT(CASE WHEN t.calc_grade_round = 30 then 1 ELSE NULL END) as  ist_grade_30',
+							 'COUNT(CASE WHEN t.calc_grade_round = 31 then 1 ELSE NULL END) as  ist_grade_31',
+							 'COUNT(CASE WHEN t.calc_grade_round = 32 then 1 ELSE NULL END) as  ist_grade_32',
+							 'COUNT(CASE WHEN t.calc_grade_round = 33 then 1 ELSE NULL END) as  ist_grade_33',
+							 'COUNT(CASE WHEN t.calc_grade_round = 34 then 1 ELSE NULL END) as  ist_grade_34',
+							 'COUNT(CASE WHEN t.calc_grade_round = 35 then 1 ELSE NULL END) as  ist_grade_35',
+							 'COUNT(CASE WHEN t.calc_grade_round = 36 then 1 ELSE NULL END) as  ist_grade_36',
 						
 							 'SUM(DISTINCT(s.soll10)) as  soll_grade_10',
 							 'SUM(DISTINCT(s.soll11)) as  soll_grade_11',
@@ -181,7 +181,7 @@ class Routes_planningModelPlannings extends \Joomla\CMS\MVC\Model\ListModel
             if ($filter_building != '') {
                $query->where($db->qn('s.building') .'=' . (int) $filter_building);
             }
-
+			//echo $query->dump(); exit;
 	 return $query;
 	}
 
