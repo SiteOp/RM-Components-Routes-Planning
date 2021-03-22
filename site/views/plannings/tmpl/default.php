@@ -39,7 +39,6 @@ $menuparams = $menu->getParams($itemId);
 
 $canEdit = Factory::getUser()->authorise('core.edit', 'com_act');
 
-
 ?> 
 
 <div id="routes_planning">
@@ -70,8 +69,6 @@ $canEdit = Factory::getUser()->authorise('core.edit', 'com_act');
             </div> 
         </div>
 
-
-
         <div class="table-responsive mt-5">
             <table id="compare_table" class="display table table-sm table-striped table-bordered text-center" style="width:100%"  >
             
@@ -86,10 +83,9 @@ $canEdit = Factory::getUser()->authorise('core.edit', 'com_act');
                 <tbody>
                     <tr>
                         <td>Soll</td>
-                        <?php for($i = 10; $i <= 36; $i++) : ?>
-                            <?php  $soll = "soll_grade_$i"; ?>
-                            <td><?php echo $this->items[0]->$soll; ?></td>
-                        <?php endfor; ?>
+                        <?php foreach($this->sollRoutes[0] AS $sollRoutes) : ?>
+                            <td><?php echo $sollRoutes[0]; ?></td>
+                        <?php endforeach; ?>
                     </tr>
                     <tr>
                         <td>Ist</td>
@@ -101,18 +97,18 @@ $canEdit = Factory::getUser()->authorise('core.edit', 'com_act');
                     <tr>
                         <td>Diff</td>
                             <?php for($i = 10; $i <= 36; $i++) : ?>
-                                <?php  $soll = "soll_grade_$i"; ?>
+                                <?php  $soll = "soll_g_$i"; ?>
                                 <?php  $ist = "ist_grade_$i"; ?>
-                                <?php if(($this->items[0]->$ist - $this->items[0]->$soll) < 0) {
+                                <?php if(($this->items[0]->$ist - $this->sollRoutes[0]->$soll) < 0) {
                                     echo '<td class="diff_minus">';
                                 } 
-                                elseif (($this->items[0]->$ist - $this->items[0]->$soll) > 0) {
+                                elseif (($this->items[0]->$ist - $this->sollRoutes[0]->$soll) > 0) {
                                     echo '<td class="diff_plus">';
                                 }
                                 else {
                                     echo '<td>';
                                 }; ?>
-                                <?php echo ($this->items[0]->$ist - $this->items[0]->$soll); ?></td>
+                                <?php echo ($this->items[0]->$ist - $this->sollRoutes[0]->$soll); ?></td>
                             <?php endfor; ?>
                     </tr>
                 </tbody>
@@ -132,7 +128,6 @@ $canEdit = Factory::getUser()->authorise('core.edit', 'com_act');
         </div>
     </div>
 </div>
-
 
 
 

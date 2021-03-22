@@ -25,7 +25,7 @@ for($i = 10; $i <= 36; $i++) {
 $ist_routes_data = json_encode([
   ($ist_grade_3  = ($ist_10 + $ist_11)),               // 3
   ($ist_grade_4  = ($ist_12 + $ist_13 + $ist_14)),     // 4
-  ($ist_grade_5  = ($ist_15 + $ist_15 + $ist_17 )),	   // 5
+  ($ist_grade_5  = ($ist_15 + $ist_16 + $ist_17 )),	   // 5
   ($ist_grade_6  = ($ist_18 + $ist_19 + $ist_20 )),	   // 6
   ($ist_grade_7  = ($ist_21 + $ist_22 + $ist_23 )),	   // 7
   ($ist_grade_8  = ($ist_24 + $ist_25 + $ist_26 )),	   // 8
@@ -37,9 +37,9 @@ $ist_routes_data = json_encode([
 
 // Erstelle Variablen $soll_10, $soll_11 usw => Sollwert
 for($i = 10; $i <= 36; $i++) {
-  $soll = "soll_grade_$i";
+  $soll = "soll_g_$i";
   $varname = 'soll_';
-  ${$varname.$i} = $this->items[0]->$soll;
+  ${$varname.$i} = $this->sollRoutes[0]->$soll;
 }
 
 // Estelle Gesamtwerte (3,4,5,6) usw aus den Einzelwerten (7, 7-, 7+)
@@ -47,7 +47,7 @@ for($i = 10; $i <= 36; $i++) {
 $soll_routes_data = json_encode([
   ($soll_grade_3  = ($soll_10 + $soll_11)),             // 3
   ($soll_grade_4  = ($soll_12 + $soll_13 + $soll_14)),  // 4
-  ($soll_grade_5  = ($soll_15 + $soll_15 + $soll_17 )),	// 5
+  ($soll_grade_5  = ($soll_15 + $soll_16 + $soll_17 )),	// 5
   ($soll_grade_6  = ($soll_18 + $soll_19 + $soll_20 )),	// 6
   ($soll_grade_7  = ($soll_21 + $soll_22 + $soll_23 )),	// 7
   ($soll_grade_8  = ($soll_24 + $soll_25 + $soll_26 )),	// 8

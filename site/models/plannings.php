@@ -126,37 +126,8 @@ class Routes_planningModelPlannings extends \Joomla\CMS\MVC\Model\ListModel
 							 'COUNT(CASE WHEN t.calc_grade_round = 34 then 1 ELSE NULL END) as  ist_grade_34',
 							 'COUNT(CASE WHEN t.calc_grade_round = 35 then 1 ELSE NULL END) as  ist_grade_35',
 							 'COUNT(CASE WHEN t.calc_grade_round = 36 then 1 ELSE NULL END) as  ist_grade_36',
-						
-							 'SUM(DISTINCT(s.soll10)) as  soll_grade_10',
-							 'SUM(DISTINCT(s.soll11)) as  soll_grade_11',
-							 'SUM(DISTINCT(s.soll12)) as  soll_grade_12',
-							 'SUM(DISTINCT(s.soll13)) as  soll_grade_13',
-							 'SUM(DISTINCT(s.soll14)) as  soll_grade_14',
-							 'SUM(DISTINCT(s.soll15)) as  soll_grade_15',
-							 'SUM(DISTINCT(s.soll16)) as  soll_grade_16',
-							 'SUM(DISTINCT(s.soll17)) as  soll_grade_17',
-							 'SUM(DISTINCT(s.soll18)) as  soll_grade_18',
-							 'SUM(DISTINCT(s.soll19)) as  soll_grade_19',
-							 'SUM(DISTINCT(s.soll20)) as  soll_grade_20',
-							 'SUM(DISTINCT(s.soll21)) as  soll_grade_21',
-							 'SUM(DISTINCT(s.soll22)) as  soll_grade_22',
-							 'SUM(DISTINCT(s.soll23)) as  soll_grade_23',
-							 'SUM(DISTINCT(s.soll24)) as  soll_grade_24',
-							 'SUM(DISTINCT(s.soll25)) as  soll_grade_25',
-							 'SUM(DISTINCT(s.soll26)) as  soll_grade_26',
-							 'SUM(DISTINCT(s.soll27)) as  soll_grade_27',
-							 'SUM(DISTINCT(s.soll28)) as  soll_grade_28',
-							 'SUM(DISTINCT(s.soll29)) as  soll_grade_29',
-							 'SUM(DISTINCT(s.soll30)) as  soll_grade_30',
-							 'SUM(DISTINCT(s.soll31)) as  soll_grade_31',
-							 'SUM(DISTINCT(s.soll32)) as  soll_grade_32',
-							 'SUM(DISTINCT(s.soll33)) as  soll_grade_33',
-							 'SUM(DISTINCT(s.soll34)) as  soll_grade_34',
-							 'SUM(DISTINCT(s.soll35)) as  soll_grade_35',
-							 'SUM(DISTINCT(s.soll36)) as  soll_grade_36',
-
+					
 							 'COUNT(a.state) as  totalroutes',
-							
 							)
 						);
 			
@@ -184,6 +155,81 @@ class Routes_planningModelPlannings extends \Joomla\CMS\MVC\Model\ListModel
 			//echo $query->dump(); exit;
 	 return $query;
 	}
+
+
+
+
+	/**
+	 * Soll Bestand
+	 *
+	 * @return  mixed Array
+	 */
+    public function getSollRoutes()
+    { 
+        $db    = $this->getDbo();
+        $query = $db->getQuery(true);
+        
+		$query->select(array('SUM(s.soll10) as soll_g_10',
+						     'SUM(s.soll11) as soll_g_11',
+							 'SUM(s.soll12) as soll_g_12',
+							 'SUM(s.soll13) as soll_g_13',
+							 'SUM(s.soll14) as soll_g_14',
+							 'SUM(s.soll15) as soll_g_15', // 5-
+							 'SUM(s.soll16) as soll_g_16', // 5
+							 'SUM(s.soll17) as soll_g_17', // 5+
+							 'SUM(s.soll18) as soll_g_18',
+							 'SUM(s.soll19) as soll_g_19',
+							 'SUM(s.soll20) as soll_g_20',
+							 'SUM(s.soll21) as soll_g_21',
+							 'SUM(s.soll22) as soll_g_22',
+							 'SUM(s.soll23) as soll_g_23',
+							 'SUM(s.soll24) as soll_g_24',
+							 'SUM(s.soll25) as soll_g_25',
+							 'SUM(s.soll26) as soll_g_26',
+							 'SUM(s.soll27) as soll_g_27',
+							 'SUM(s.soll28) as soll_g_28',
+							 'SUM(s.soll29) as soll_g_29',
+							 'SUM(s.soll30) as soll_g_30',
+							 'SUM(s.soll31) as soll_g_31',
+							 'SUM(s.soll32) as soll_g_32',
+							 'SUM(s.soll33) as soll_g_33',
+							 'SUM(s.soll34) as soll_g_34',
+							 'SUM(s.soll35) as soll_g_35',
+							 'SUM(s.soll36) as soll_g_36',));
+        $query->from('#__act_sector AS s');
+
+		// Filtering sector
+		$filter_sector = $this->state->get("filter.sector");
+			if ($filter_sector != '')
+			{
+				//$query->where($db->qn('s.id') . '=' . (int) $filter_sector);
+				JArrayHelper::toInteger($filter_sector);
+                $query->where($db->qn('s.id') . 'IN (' . implode(',', $filter_sector).')');
+			}
+
+		// Filtering building
+        $filter_building = $this->state->get("filter.building");
+            if ($filter_building != '') {
+               $query->where($db->qn('s.building') .'=' . (int) $filter_building);
+            }
+ 
+        $db->setQuery($query);
+        $result = $db->loadObjectList();
+        
+        return $result;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 	/**
