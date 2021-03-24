@@ -84,7 +84,7 @@ $canEdit = Factory::getUser()->authorise('core.edit', 'com_act');
                     <tr>
                         <td>Soll</td>
                         <?php foreach($this->sollRoutes[0] AS $sollRoutes) : ?>
-                            <td><?php echo $sollRoutes[0]; ?></td>
+                            <td><?php echo $sollRoutes; ?></td>
                         <?php endforeach; ?>
                     </tr>
                     <tr>
