@@ -86,10 +86,4 @@
             </fieldset>
         </fields>
     </config>
-    <plugins>
-        <plugin group="search" plugin="routes_planning"/>
-    </plugins>
-    
 </extension>
-<!-- Component built by the Joomla Component Creator -->
-<!-- http://www.component-creator.com/ -->
