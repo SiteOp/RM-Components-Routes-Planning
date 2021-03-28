@@ -1,23 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
 <config>
-    <fieldset label="COM_ROUTES_PLANNING" name="routes_planning">
-        
-    </fieldset>
+  <fieldset label="COM_ROUTES_PLANNING" name="routes_planning">
+      
+  </fieldset>
 
-    <fieldset name="permissions" description="JCONFIG_PERMISSIONS_DESC" label="JCONFIG_PERMISSIONS_LABEL">
-        <field name="rules" type="rules" component="com_routes_planning" class="inputbox" filter="rules" validate="rules" label="JCONFIG_PERMISSIONS_LABEL" section="component" />
+  <fieldset name="permissions" description="JCONFIG_PERMISSIONS_DESC" label="JCONFIG_PERMISSIONS_LABEL">
+    <field name="rules" type="rules" component="com_routes_planning" class="inputbox" filter="rules" validate="rules" label="JCONFIG_PERMISSIONS_LABEL" section="component" />
 	</fieldset>
 
-  <fieldset label="Sektor anlegen" name="sectoredit">
-    <field name="berechnungsart" 
-		 	   default="0" 
-			   type="radio" 
-			   class="" 
-			   label="Berechnungsart der Soll-Verteilung" 
-			   description="">
-				<option value="0">Einzelne Werte pro Routengrad</option>
-				<option value="1">Prozentwerte pro Gesamtgrad</option>
-        </field>
+  <fieldset label="Sollerfassung" name="sollerfassung">
+    <field name="record_should" 
+		 	     default="0" 
+			     type="radio" 
+			     class="btn-group btn-group-yesno"  
+			     label="Sollerfassung" 
+			     description="Sollen Werte erfasst werden?">
+            <option value="0">JNO</option>
+            <option value="1">JYES</option>
+    </field>
+    <field name="record_sector_or_building"
+           showon="record_should:1"
+		 	     default="2" 
+			     type="radio" 
+			     class="btn-group btn-group-yesno"  
+			     label="Erfassung innerhalb" 
+			     description="Sollen Werte erfasst werden?">
+            <option value="1">Gebbäude</option>
+            <option value="2">Sektoren</option>
+    </field>
+    <field name="berechnungsart"
+           showon="record_should:1"
+           default="0" 
+           type="radio" 
+           class="" 
+           label="Berechnungsart - ALT" 
+           description="">
+              <option value="0">Einzelne Werte pro Routengrad</option>
+              <option value="1">Prozentwerte pro Gesamtgrad</option>
+    </field>
+    <field name="record_type"
+           showon="record_should:1"
+           default="0" 
+           type="radio" 
+           class="" 
+           label="Berechnungsart der Sollerfassung" 
+           description="">
+              <option value="0">Einzelne Werte pro Routengrad</option>
+              <option value="1">Prozentwerte pro Gesamtgrad</option>
+    </field>
+
   </fieldset>
 
     <fieldset label="Datatables" name="datatables">
