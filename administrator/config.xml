@@ -1,14 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <config>
   <fieldset label="COM_ROUTES_PLANNING" name="routes_planning">
-      
-  </fieldset>
 
-  <fieldset name="permissions" description="JCONFIG_PERMISSIONS_DESC" label="JCONFIG_PERMISSIONS_LABEL">
-    <field name="rules" type="rules" component="com_routes_planning" class="inputbox" filter="rules" validate="rules" label="JCONFIG_PERMISSIONS_LABEL" section="component" />
-	</fieldset>
-
-  <fieldset label="Sollerfassung" name="sollerfassung">
     <field name="record_should" 
 		 	     default="0" 
 			     type="radio" 
@@ -48,10 +41,50 @@
               <option value="0">Einzelne Werte pro Routengrad</option>
               <option value="1">Prozentwerte pro Gesamtgrad</option>
     </field>
-
+    <field name="grade_start_percent"
+           type="number"
+           showon="record_type:1"
+           default="3"
+           label="SW-Grad Start (UIAA)"
+           description="Welcher ist der niedrigste Grad in der Halle?"
+           min="3"
+           max="7">
+    </field>
+    <field name="grade_end_percent"
+           type="number"
+           showon="record_type:1" 
+           default="11"
+           label="SW-Grad End (UIAA)"
+           description="Welcher ist der höchste Grad in der Halle?"
+           min="7"
+           max="12">
+    </field>
+    <field name="grade_start_individually"
+           type="number"
+           showon="record_type:0"
+           default="10"
+           label="SW-Grad Start (Conversion)"
+           description="Welcher ist der niedrigste Grad in der Halle? 10 entspricht 3.Grad (Die Grade werden Konvertiert)"
+           min="10"
+           max="36">
+    </field>
+    <field name="grade_end_individually"
+           type="number"
+           showon="record_type:0" 
+           default="36"
+           label="SW-Grad Ende (Conversion)"
+           description="Welcher ist der höchste Grad in der Halle?"
+           min="10"
+           max="36">
+    </field>
+      
   </fieldset>
 
-    <fieldset label="Datatables" name="datatables">
+  <fieldset name="permissions" description="JCONFIG_PERMISSIONS_DESC" label="JCONFIG_PERMISSIONS_LABEL">
+    <field name="rules" type="rules" component="com_routes_planning" class="inputbox" filter="rules" validate="rules" label="JCONFIG_PERMISSIONS_LABEL" section="component" />
+	</fieldset>
+
+   <fieldset label="Datatables" name="datatables">
     <field name="holds_manufacturer" 
 		 	   default="0" 
 			   type="radio" 
@@ -63,7 +96,7 @@
         </field>
   </fieldset>
 
-    <fieldset name="component">
+  <fieldset name="component">
         <field name="save_history" type="radio" class="btn-group btn-group-yesno" default="0" label="JGLOBAL_SAVE_HISTORY_OPTIONS_LABEL" description="JGLOBAL_SAVE_HISTORY_OPTIONS_DESC">
             <option value="0">JNO</option>
             <option value="1">JYES</option>
