@@ -7,7 +7,7 @@
     <author>Birgit Gebhard</author>
     <authorEmail>info@routes-manager.de</authorEmail>
     <authorUrl>https://www.routes-manager.de</authorUrl>
-    <version>1.0.4-beta</version>
+    <version>1.0.5-beta</version>
     <description>COM_ROUTES_PLANNING_XML_DESCRIPTION</description>
     
     <scriptfile>script.php</scriptfile>
