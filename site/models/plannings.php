@@ -219,6 +219,69 @@ class Routes_planningModelPlannings extends \Joomla\CMS\MVC\Model\ListModel
         return $result;
     }
 
+	/**
+	 * Soll Bestand
+	 *
+	 * @return  mixed Array
+	 */
+    public function getSollRoutesInd()
+    { 
+        $db    = $this->getDbo();
+        $query = $db->getQuery(true);
+        
+		$query->select(array('SUM(JSON_EXTRACT(routessoll_ind, "$.g10")) as grade10',
+	                         'SUM(JSON_EXTRACT(routessoll_ind, "$.g11")) as grade11',
+	                         'SUM(JSON_EXTRACT(routessoll_ind, "$.g12")) as grade12',
+	                         'SUM(JSON_EXTRACT(routessoll_ind, "$.g13")) as grade13',
+	                         'SUM(JSON_EXTRACT(routessoll_ind, "$.g14")) as grade14',
+	                         'SUM(JSON_EXTRACT(routessoll_ind, "$.g15")) as grade15',
+	                         'SUM(JSON_EXTRACT(routessoll_ind, "$.g16")) as grade16',
+	                         'SUM(JSON_EXTRACT(routessoll_ind, "$.g17")) as grade17',
+	                         'SUM(JSON_EXTRACT(routessoll_ind, "$.g18")) as grade18',
+	                         'SUM(JSON_EXTRACT(routessoll_ind, "$.g19")) as grade19',
+	                         'SUM(JSON_EXTRACT(routessoll_ind, "$.g20")) as grade20',
+	                         'SUM(JSON_EXTRACT(routessoll_ind, "$.g21")) as grade21',
+	                         'SUM(JSON_EXTRACT(routessoll_ind, "$.g22")) as grade22',
+	                         'SUM(JSON_EXTRACT(routessoll_ind, "$.g23")) as grade23',
+	                         'SUM(JSON_EXTRACT(routessoll_ind, "$.g24")) as grade24',
+	                         'SUM(JSON_EXTRACT(routessoll_ind, "$.g25")) as grade25',
+	                         'SUM(JSON_EXTRACT(routessoll_ind, "$.g26")) as grade26',
+	                         'SUM(JSON_EXTRACT(routessoll_ind, "$.g27")) as grade27',
+	                         'SUM(JSON_EXTRACT(routessoll_ind, "$.g28")) as grade28',
+	                         'SUM(JSON_EXTRACT(routessoll_ind, "$.g29")) as grade29',
+	                         'SUM(JSON_EXTRACT(routessoll_ind, "$.g30")) as grade30',
+	                         'SUM(JSON_EXTRACT(routessoll_ind, "$.g31")) as grade31',
+	                         'SUM(JSON_EXTRACT(routessoll_ind, "$.g32")) as grade32',
+	                         'SUM(JSON_EXTRACT(routessoll_ind, "$.g33")) as grade33',
+	                         'SUM(JSON_EXTRACT(routessoll_ind, "$.g34")) as grade34',
+	                         'SUM(JSON_EXTRACT(routessoll_ind, "$.g35")) as grade35',
+	                         'SUM(JSON_EXTRACT(routessoll_ind, "$.g36")) as grade36',
+							),
+					  );
+        $query->from('#__act_sector');
+		$query->where('state = 1');
+
+		// Filtering sector
+		$filter_sector = $this->state->get("filter.sector");
+			if ($filter_sector != '')
+			{
+				//$query->where($db->qn('s.id') . '=' . (int) $filter_sector);
+				JArrayHelper::toInteger($filter_sector);
+                $query->where($db->qn('id') . 'IN (' . implode(',', $filter_sector).')');
+			}
+
+		// Filtering building
+        $filter_building = $this->state->get("filter.building");
+            if ($filter_building != '') {
+               $query->where($db->qn('building') .'=' . (int) $filter_building);
+            }
+ 
+        $db->setQuery($query);
+        $result = $db->loadObjectList();
+        
+        return $result;
+    }
+
 
 
 

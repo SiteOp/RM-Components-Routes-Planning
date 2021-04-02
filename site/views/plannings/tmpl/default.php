@@ -88,12 +88,20 @@ $canEdit = Factory::getUser()->authorise('core.edit', 'com_act');
                         <?php endforeach; ?>
                     </tr>
                     <tr>
+                        <td>Soll</td>
+                        <?php for ($i=10; $i < 36; $i++) : ?>
+                            <?php  $grade = "grade$i"; ?>
+                            <td><?php echo $this->sollRoutesInd[0]->$grade; ?></td>
+                        <?php endfor; ?>
+                    </tr>
+                    <tr>
                         <td>Ist</td>
                         <?php for($i = 10; $i <= 36; $i++) : ?>
                             <?php  $ist = "ist_grade_$i"; ?>
                             <td><?php echo $this->items[0]->$ist; ?></td>
                         <?php endfor; ?>
                     </tr>
+
                     <tr>
                         <td>Diff</td>
                             <?php for($i = 10; $i <= 36; $i++) : ?>

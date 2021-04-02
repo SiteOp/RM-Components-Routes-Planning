@@ -51,6 +51,7 @@ class Routes_planningViewPlannings extends \Joomla\CMS\MVC\View\HtmlView
 		$this->activeFilters = $this->get('ActiveFilters');
 		$this->replaceRoutes = $this->get('ReplaceRoutes');
 		$this->sollRoutes = $this->get('SollRoutes');
+		$this->sollRoutesInd = $this->get('SollRoutesInd');
 
 		// Check for errors.
 		if (count($errors = $this->get('Errors')))

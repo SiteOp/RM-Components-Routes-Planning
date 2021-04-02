@@ -11,6 +11,7 @@ defined('_JEXEC') or die;
 
 use Joomla\CMS\Language\Text;
 
+
 // Erstelle Label für Grade 3.Grad usw (Grad wird innerhalb Charts hinzugefügt)
 $label_grade = json_encode([3,4,5,6,7,8,9,10,11,12]);
 
@@ -37,9 +38,9 @@ $ist_routes_data = json_encode([
 
 // Erstelle Variablen $soll_10, $soll_11 usw => Sollwert
 for($i = 10; $i <= 36; $i++) {
-  $soll = "soll_g_$i";
+  $soll = "grade$i";
   $varname = 'soll_';
-  ${$varname.$i} = $this->sollRoutes[0]->$soll;
+  ${$varname.$i} =  $this->sollRoutesInd[0]->$soll;
 }
 
 // Estelle Gesamtwerte (3,4,5,6) usw aus den Einzelwerten (7, 7-, 7+)
