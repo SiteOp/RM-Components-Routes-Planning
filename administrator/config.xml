@@ -59,25 +59,28 @@
            min="7"
            max="12">
     </field>
-    <field name="grade_start_individually"
-           type="number"
-           showon="record_type:0"
-           default="10"
-           label="SW-Grad Start (Conversion)"
-           description="Welcher ist der niedrigste Grad in der Halle? 10 entspricht 3.Grad (Die Grade werden Konvertiert)"
-           min="10"
-           max="36">
-    </field>
-    <field name="grade_end_individually"
-           type="number"
+    <field name="grade_start_individually" 
+           type="list" 
            showon="record_type:0" 
-           default="36"
-           label="SW-Grad Ende (Conversion)"
-           description="Welcher ist der höchste Grad in der Halle?"
-           min="10"
-           max="36">
+           default="10" 
+           label="SW-Grad Start (Conversion)"
+           description="Welcher ist der niedrigste Grad in der Halle? 10 entspricht 3.Grad (Die Grade werden Konvertiert)">
+            <option value="10">3</option>
+            <option value="12">4</option>
+            <option value="15">5</option>
+            <option value="18">6</option> 
     </field>
-      
+    <field name="grade_end_individually" 
+           type="list" 
+           showon="record_type:0" 
+           default="36" 
+           label="SW-Grad Ende (Conversion)"
+           description="Welcher ist der höchste Grad in der Halle?">
+            <option value="29">9</option>
+            <option value="32">10</option>
+            <option value="35">11</option>
+            <option value="36">12</option> 
+    </field>   
   </fieldset>
 
   <fieldset name="permissions" description="JCONFIG_PERMISSIONS_DESC" label="JCONFIG_PERMISSIONS_LABEL">
