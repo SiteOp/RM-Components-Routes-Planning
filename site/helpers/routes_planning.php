@@ -89,6 +89,27 @@ class Routes_planningHelpersRoutes_planning
 		return $db->loadResult();
 	}
 	
+	/**
+	 * Erhalte den ganzen Grade aus einem Zwischengrad
+	 * z.b 6- = 6
+	 * Bezug aus der Table Grade Spalte filter_uiaa
+	 *
+	 * @param   int     $id 
+	 *
+	 * @return  string 
+	 */
+	public static function getFilterUiaa($id)
+	{
+		$db = Factory::getDbo();
+		$query = $db->getQuery(true);
+
+		$query->select('filter_uiaa')
+			->from('#__act_grade')
+			->where('id = ' . (int) $id);
+
+		$db->setQuery($query);
+		return $db->loadResult();
+	}
 
     /**
      * Gets the edit permission for an user

@@ -126,7 +126,17 @@ class Routes_planningModelPlannings extends \Joomla\CMS\MVC\Model\ListModel
 							 'COUNT(CASE WHEN t.calc_grade_round = 34 then 1 ELSE NULL END) as  ist_grade_34',
 							 'COUNT(CASE WHEN t.calc_grade_round = 35 then 1 ELSE NULL END) as  ist_grade_35',
 							 'COUNT(CASE WHEN t.calc_grade_round = 36 then 1 ELSE NULL END) as  ist_grade_36',
-					
+
+							 'COUNT(CASE WHEN t.calc_grade_round BETWEEN 10 AND 11 then 1 ELSE NULL END) as ist_gradetotal3',
+							 'COUNT(CASE WHEN t.calc_grade_round BETWEEN 12 AND 14 then 1 ELSE NULL END) as ist_gradetotal4',
+							 'COUNT(CASE WHEN t.calc_grade_round BETWEEN 15 AND 17 then 1 ELSE NULL END) as ist_gradetotal5',
+							 'COUNT(CASE WHEN t.calc_grade_round BETWEEN 18 AND 20 then 1 ELSE NULL END) as ist_gradetotal6',
+							 'COUNT(CASE WHEN t.calc_grade_round BETWEEN 21 AND 23 then 1 ELSE NULL END) as ist_gradetotal7',
+							 'COUNT(CASE WHEN t.calc_grade_round BETWEEN 24 AND 26 then 1 ELSE NULL END) as ist_gradetotal8',
+							 'COUNT(CASE WHEN t.calc_grade_round BETWEEN 27 AND 29 then 1 ELSE NULL END) as ist_gradetotal9',
+							 'COUNT(CASE WHEN t.calc_grade_round BETWEEN 30 AND 32 then 1 ELSE NULL END) as ist_gradetotal10',
+							 'COUNT(CASE WHEN t.calc_grade_round BETWEEN 33 AND 35 then 1 ELSE NULL END) as ist_gradetotal11',
+							 'COUNT(CASE WHEN t.calc_grade_round = 36 then 1 ELSE NULL END)  as ist_gradetotal12',
 							 'COUNT(a.state) as  totalroutes',
 							)
 						);
@@ -156,68 +166,6 @@ class Routes_planningModelPlannings extends \Joomla\CMS\MVC\Model\ListModel
 	 return $query;
 	}
 
-
-
-
-	/**
-	 * Soll Bestand
-	 *
-	 * @return  mixed Array
-	 */
-    public function getSollRoutes()
-    { 
-        $db    = $this->getDbo();
-        $query = $db->getQuery(true);
-        
-		$query->select(array('SUM(s.soll10) as soll_g_10',
-						     'SUM(s.soll11) as soll_g_11',
-							 'SUM(s.soll12) as soll_g_12',
-							 'SUM(s.soll13) as soll_g_13',
-							 'SUM(s.soll14) as soll_g_14',
-							 'SUM(s.soll15) as soll_g_15', // 5-
-							 'SUM(s.soll16) as soll_g_16', // 5
-							 'SUM(s.soll17) as soll_g_17', // 5+
-							 'SUM(s.soll18) as soll_g_18',
-							 'SUM(s.soll19) as soll_g_19',
-							 'SUM(s.soll20) as soll_g_20',
-							 'SUM(s.soll21) as soll_g_21',
-							 'SUM(s.soll22) as soll_g_22',
-							 'SUM(s.soll23) as soll_g_23',
-							 'SUM(s.soll24) as soll_g_24',
-							 'SUM(s.soll25) as soll_g_25',
-							 'SUM(s.soll26) as soll_g_26',
-							 'SUM(s.soll27) as soll_g_27',
-							 'SUM(s.soll28) as soll_g_28',
-							 'SUM(s.soll29) as soll_g_29',
-							 'SUM(s.soll30) as soll_g_30',
-							 'SUM(s.soll31) as soll_g_31',
-							 'SUM(s.soll32) as soll_g_32',
-							 'SUM(s.soll33) as soll_g_33',
-							 'SUM(s.soll34) as soll_g_34',
-							 'SUM(s.soll35) as soll_g_35',
-							 'SUM(s.soll36) as soll_g_36',));
-        $query->from('#__act_sector AS s');
-
-		// Filtering sector
-		$filter_sector = $this->state->get("filter.sector");
-			if ($filter_sector != '')
-			{
-				//$query->where($db->qn('s.id') . '=' . (int) $filter_sector);
-				JArrayHelper::toInteger($filter_sector);
-                $query->where($db->qn('s.id') . 'IN (' . implode(',', $filter_sector).')');
-			}
-
-		// Filtering building
-        $filter_building = $this->state->get("filter.building");
-            if ($filter_building != '') {
-               $query->where($db->qn('s.building') .'=' . (int) $filter_building);
-            }
- 
-        $db->setQuery($query);
-        $result = $db->loadObjectList();
-        
-        return $result;
-    }
 
 	/**
 	 * Soll Bestand
@@ -256,6 +204,34 @@ class Routes_planningModelPlannings extends \Joomla\CMS\MVC\Model\ListModel
 	                         'SUM(JSON_EXTRACT(routessoll_ind, "$.g34")) as grade34',
 	                         'SUM(JSON_EXTRACT(routessoll_ind, "$.g35")) as grade35',
 	                         'SUM(JSON_EXTRACT(routessoll_ind, "$.g36")) as grade36',
+	                         'SUM(JSON_EXTRACT(routessoll_ind, "$.g10") +
+								  JSON_EXTRACT(routessoll_ind, "$.g11")) as gradetotal3',
+	                         'SUM(JSON_EXTRACT(routessoll_ind, "$.g12") +
+								  JSON_EXTRACT(routessoll_ind, "$.g13") +
+								  JSON_EXTRACT(routessoll_ind, "$.g14")) as gradetotal4',
+	                         'SUM(JSON_EXTRACT(routessoll_ind, "$.g15") +
+								  JSON_EXTRACT(routessoll_ind, "$.g16") +
+								  JSON_EXTRACT(routessoll_ind, "$.g17")) as gradetotal5',
+	                         'SUM(JSON_EXTRACT(routessoll_ind, "$.g18") +
+								  JSON_EXTRACT(routessoll_ind, "$.g19") +
+								  JSON_EXTRACT(routessoll_ind, "$.g20")) as gradetotal6',
+	                         'SUM(JSON_EXTRACT(routessoll_ind, "$.g21") +
+								  JSON_EXTRACT(routessoll_ind, "$.g22") +
+								  JSON_EXTRACT(routessoll_ind, "$.g23")) as gradetotal7',
+	                         'SUM(JSON_EXTRACT(routessoll_ind, "$.g24") +
+								  JSON_EXTRACT(routessoll_ind, "$.g25") +
+								  JSON_EXTRACT(routessoll_ind, "$.g26")) as gradetotal8',
+	                         'SUM(JSON_EXTRACT(routessoll_ind, "$.g27") +
+								  JSON_EXTRACT(routessoll_ind, "$.g28") +
+								  JSON_EXTRACT(routessoll_ind, "$.g29")) as gradetotal9',
+	                         'SUM(JSON_EXTRACT(routessoll_ind, "$.g30") +
+								  JSON_EXTRACT(routessoll_ind, "$.g31") +
+								  JSON_EXTRACT(routessoll_ind, "$.g32")) as gradetotal10',
+	                         'SUM(JSON_EXTRACT(routessoll_ind, "$.g33") +
+								  JSON_EXTRACT(routessoll_ind, "$.g34") +
+								  JSON_EXTRACT(routessoll_ind, "$.g35")) as gradetotal11',
+							 'SUM(JSON_EXTRACT(routessoll_ind, "$.g36")) as gradetotal12',
+
 							),
 					  );
         $query->from('#__act_sector');
@@ -281,18 +257,6 @@ class Routes_planningModelPlannings extends \Joomla\CMS\MVC\Model\ListModel
         
         return $result;
     }
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 	/**

@@ -29,7 +29,6 @@ $doc->addStyleSheet('https://cdn.datatables.net/buttons/1.6.5/css/buttons.dataTa
 $doc->addScript('node_modules/chart.js/dist/Chart.bundle.min.js');
 $doc->addScript('node_modules/chartjs-plugin-datalabels/dist/chartjs-plugin-datalabels.min.js');
 
-
 // Menüparameter - Titel usw
 $app = Factory::getApplication();
 $menu = $app->getMenu();
@@ -53,12 +52,10 @@ $canEdit = Factory::getUser()->authorise('core.edit', 'com_act');
         </div>
     <?php endif; ?>
 
-
 	<form action="<?php echo htmlspecialchars(Uri::getInstance()->toString()); ?>" method="post" name="adminForm" id="adminForm">
 
         <?php echo LayoutHelper::render('default_filter', array('view' => $this), dirname(__FILE__)); ?>
 
-        
         <div class="row mt-3">
             <div class="col">
                 <div class="card">
@@ -69,59 +66,7 @@ $canEdit = Factory::getUser()->authorise('core.edit', 'com_act');
             </div> 
         </div>
 
-        <div class="table-responsive mt-5">
-            <table id="compare_table" class="display table table-sm table-striped table-bordered text-center" style="width:100%"  >
-            
-                <thead>
-                    <tr>
-                        <th>Grad</th>
-                        <?php for($i = 10; $i <= 36; $i++) : ?>
-                                <th> <?php echo Text::_('COM_ROUTES_PLANNING_GRADE_OPTION_'.$i) ; ?></th>
-                            <?php endfor; ?>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>Soll</td>
-                        <?php foreach($this->sollRoutes[0] AS $sollRoutes) : ?>
-                            <td><?php echo $sollRoutes; ?></td>
-                        <?php endforeach; ?>
-                    </tr>
-                    <tr>
-                        <td>Soll</td>
-                        <?php for ($i=10; $i < 36; $i++) : ?>
-                            <?php  $grade = "grade$i"; ?>
-                            <td><?php echo $this->sollRoutesInd[0]->$grade; ?></td>
-                        <?php endfor; ?>
-                    </tr>
-                    <tr>
-                        <td>Ist</td>
-                        <?php for($i = 10; $i <= 36; $i++) : ?>
-                            <?php  $ist = "ist_grade_$i"; ?>
-                            <td><?php echo $this->items[0]->$ist; ?></td>
-                        <?php endfor; ?>
-                    </tr>
-
-                    <tr>
-                        <td>Diff</td>
-                            <?php for($i = 10; $i <= 36; $i++) : ?>
-                                <?php  $soll = "soll_g_$i"; ?>
-                                <?php  $ist = "ist_grade_$i"; ?>
-                                <?php if(($this->items[0]->$ist - $this->sollRoutes[0]->$soll) < 0) {
-                                    echo '<td class="diff_minus">';
-                                } 
-                                elseif (($this->items[0]->$ist - $this->sollRoutes[0]->$soll) > 0) {
-                                    echo '<td class="diff_plus">';
-                                }
-                                else {
-                                    echo '<td>';
-                                }; ?>
-                                <?php echo ($this->items[0]->$ist - $this->sollRoutes[0]->$soll); ?></td>
-                            <?php endfor; ?>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+        <?php echo $this->loadTemplate('table_einzeln'); ?>
 
         <input type="hidden" name="task" value=""/>
         <input type="hidden" name="filter_order" value="<?php echo $listOrder; ?>"/>
@@ -136,8 +81,6 @@ $canEdit = Factory::getUser()->authorise('core.edit', 'com_act');
         </div>
     </div>
 </div>
-
-
 
 <?php // https://datatables.net/download ?>
 <script src="https://cdn.datatables.net/v/bs4/dt-1.10.23/datatables.min.js" ></script>

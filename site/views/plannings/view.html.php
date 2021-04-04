@@ -45,13 +45,21 @@ class Routes_planningViewPlannings extends \Joomla\CMS\MVC\View\HtmlView
 		$app = Factory::getApplication();
 
 		$this->state = $this->get('State');
-		$this->params = $this->state->get('params');
+
 		$this->items   = $this->get('Items');
 		$this->filterForm = $this->get('FilterForm');
 		$this->activeFilters = $this->get('ActiveFilters');
 		$this->replaceRoutes = $this->get('ReplaceRoutes');
-		$this->sollRoutes = $this->get('SollRoutes');
+		//$this->sollRoutes = $this->get('SollRoutes');
 		$this->sollRoutesInd = $this->get('SollRoutesInd');
+
+		// Params
+		$this->params = $this->state->get('params');
+		$this->record_type = $this->params['record_type'];
+		$this->grade_start_percent = $this->params['grade_start_percent'];             // Prozentwerte - Niedrigster Schwierigkeitsgrad
+		$this->grade_end_percent = $this->params['grade_end_percent'];                 // Prozentwerte - Höchster  Schwierigkeitsgrad
+		$this->grade_start_individually = $this->params['grade_start_individually'];   // Einzelwerte - Niedrigster Schwierigkeitsgrad
+		$this->grade_end_individually = $this->params['grade_end_individually'];       // Einzelwerte - Höchster  Schwierigkeitsgrad
 
 		// Check for errors.
 		if (count($errors = $this->get('Errors')))
