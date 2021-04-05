@@ -21,16 +21,6 @@
             <option value="1">Gebbäude</option>
             <option value="2">Sektoren</option>
     </field>
-    <field name="berechnungsart"
-           showon="record_should:1"
-           default="0" 
-           type="radio" 
-           class="" 
-           label="Berechnungsart - ALT" 
-           description="">
-              <option value="0">Einzelne Werte pro Routengrad</option>
-              <option value="1">Prozentwerte pro Gesamtgrad</option>
-    </field>
     <field name="record_type"
            showon="record_should:1"
            default="0" 

@@ -61,6 +61,9 @@ $canEdit = Factory::getUser()->authorise('core.edit', 'com_act');
                 <div class="card">
                     <div class="card-body">
                             <canvas id="bar-chart-grouped" width="" height="60"></canvas>
+                            <div class="text-center">
+                            Soll <?php echo $this->totalsoll; ?> | Ist <?php echo $this->items[0]->totalroutes; ?> 
+                            </div>
                     </div>
                 </div>
             </div> 

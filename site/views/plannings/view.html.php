@@ -50,16 +50,60 @@ class Routes_planningViewPlannings extends \Joomla\CMS\MVC\View\HtmlView
 		$this->filterForm = $this->get('FilterForm');
 		$this->activeFilters = $this->get('ActiveFilters');
 		$this->replaceRoutes = $this->get('ReplaceRoutes');
-		//$this->sollRoutes = $this->get('SollRoutes');
 		$this->sollRoutesInd = $this->get('SollRoutesInd');
 
 		// Params
 		$this->params = $this->state->get('params');
 		$this->record_type = $this->params['record_type'];
-		$this->grade_start_percent = $this->params['grade_start_percent'];             // Prozentwerte - Niedrigster Schwierigkeitsgrad
-		$this->grade_end_percent = $this->params['grade_end_percent'];                 // Prozentwerte - Höchster  Schwierigkeitsgrad
 		$this->grade_start_individually = $this->params['grade_start_individually'];   // Einzelwerte - Niedrigster Schwierigkeitsgrad
 		$this->grade_end_individually = $this->params['grade_end_individually'];       // Einzelwerte - Höchster  Schwierigkeitsgrad
+
+		$grade_start = Routes_planningHelpersRoutes_planning::getFilterUiaa($this->grade_start_individually); // Wandelt den startwert um den Grad (z.B Start = 10 entspricht 3.Grad)
+		$grade_end = Routes_planningHelpersRoutes_planning::getFilterUiaa($this->grade_end_individually); 
+
+		// CHARTS
+		$undefined = $this->items[0]->ist_undefined; // Routen ohne Routengrad z. B Speedrouten 
+
+		// JSON für IST-Werte 
+		$ist_routes_data = [];
+		for ($i = $grade_start; $i <= $grade_end; $i++) {
+			$ist = "ist_gradetotal$i";
+			$varname = 'ist_';
+			array_push($ist_routes_data,$this->items[0]->$ist);
+		}
+
+		if(!empty($undefined)) {
+			array_push($ist_routes_data, $undefined );
+		};
+
+		$this->ist_routes_data = json_encode($ist_routes_data);
+
+
+
+		// JSON für Soll-Werte Erfassung als einzelwerte
+		$sollgrade = [];
+		for ($i = $grade_start; $i <= $grade_end; $i++) {
+			$soll = "gradetotal$i";
+			$varname = 'soll_';
+			array_push($sollgrade,  $this->sollRoutesInd[0]->$soll);
+ 		};
+		$this->totalsoll = array_sum($sollgrade);
+		$this->soll_routes_data = json_encode($sollgrade);
+
+		
+
+		// JSON für Label (Grad wird innerhalb Charts hinzugefügt)
+		$label_grade = [];
+			for ($i = $grade_start; $i <= $grade_end; $i++) {
+			array_push($label_grade, $i);
+		}
+		if(!empty($undefined)) {
+			array_push($label_grade, '?' );
+		};
+
+		$this->label_grade = json_encode($label_grade);
+
+
 
 		// Check for errors.
 		if (count($errors = $this->get('Errors')))

@@ -137,6 +137,7 @@ class Routes_planningModelPlannings extends \Joomla\CMS\MVC\Model\ListModel
 							 'COUNT(CASE WHEN t.calc_grade_round BETWEEN 30 AND 32 then 1 ELSE NULL END) as ist_gradetotal10',
 							 'COUNT(CASE WHEN t.calc_grade_round BETWEEN 33 AND 35 then 1 ELSE NULL END) as ist_gradetotal11',
 							 'COUNT(CASE WHEN t.calc_grade_round = 36 then 1 ELSE NULL END)  as ist_gradetotal12',
+							 'COUNT(CASE WHEN t.calc_grade_round NOT BETWEEN 10 AND 36 then 1 ELSE NULL END) as ist_undefined',
 							 'COUNT(a.state) as  totalroutes',
 							)
 						);
@@ -145,15 +146,13 @@ class Routes_planningModelPlannings extends \Joomla\CMS\MVC\Model\ListModel
 		      ->join('LEFT', '#__act_trigger_calc AS t ON t.id = a.id') // VIEW TABLE
 			  ->join('LEFT', '#__act_line AS l ON l.id = a.line')
 			  ->join('LEFT', '#__act_sector AS s ON s.id = l.sector')
-			 // ->join('LEFT', '#__act_route AS r ON r.line = a.line')
 			  ->where('a.state IN (1,-1)'); // Status Veröffentlicht und in Planung
 
 		// Filtering sector
 		$filter_sector = $this->state->get("filter.sector");
 			if ($filter_sector != '')
 			{
-				//$query->where($db->qn('s.id') . '=' . (int) $filter_sector);
-				JArrayHelper::toInteger($filter_sector);
+				ArrayHelper::toInteger($filter_sector);
                 $query->where($db->qn('s.id') . 'IN (' . implode(',', $filter_sector).')');
 			}
 
@@ -231,18 +230,15 @@ class Routes_planningModelPlannings extends \Joomla\CMS\MVC\Model\ListModel
 								  JSON_EXTRACT(routessoll_ind, "$.g34") +
 								  JSON_EXTRACT(routessoll_ind, "$.g35")) as gradetotal11',
 							 'SUM(JSON_EXTRACT(routessoll_ind, "$.g36")) as gradetotal12',
-
 							),
 					  );
         $query->from('#__act_sector');
-		$query->where('state = 1');
 
 		// Filtering sector
 		$filter_sector = $this->state->get("filter.sector");
 			if ($filter_sector != '')
 			{
-				//$query->where($db->qn('s.id') . '=' . (int) $filter_sector);
-				JArrayHelper::toInteger($filter_sector);
+				ArrayHelper::toInteger($filter_sector);
                 $query->where($db->qn('id') . 'IN (' . implode(',', $filter_sector).')');
 			}
 
@@ -283,7 +279,7 @@ class Routes_planningModelPlannings extends \Joomla\CMS\MVC\Model\ListModel
 		$filter_sector = $this->state->get("filter.sector");
 			if ($filter_sector != '')
 			{
-				JArrayHelper::toInteger($filter_sector);
+				ArrayHelper::toInteger($filter_sector);
                 $query->where($db->qn('s.id') . 'IN (' . implode(',', $filter_sector).')');
 			}
  
