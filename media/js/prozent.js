@@ -108,7 +108,7 @@
 		console.log(routes_undified); 
 
 		// Erstelle ein Object mit den Werten Grad und Routenanzahl
-		let obj_routes = {'3':routes3, '4':routes4,'5':routes5,'6':routes6, '7':routes7,'8':routes8,'9':routes9, '10':routes10,'11':routes11,'12':routes12,'13':routes_undified};
+		let obj_routes = {'g3':routes3, 'g4':routes4,'g5':routes5,'g6':routes6, 'g7':routes7,'g8':routes8,'g9':routes9, 'g10':routes10,'g11':routes11,'g12':routes12,'g13':routes_undified};
 		let json_routes = JSON.stringify(obj_routes);		// Konvertierung  JS object to JSON string
 		$('#routessoll').val(json_routes);  				// Werte als Value des Hidden Fields routessoll verwenden
 	};
