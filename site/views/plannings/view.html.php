@@ -30,6 +30,7 @@ class Routes_planningViewPlannings extends \Joomla\CMS\MVC\View\HtmlView
 	protected $state;
 
 	protected $params;
+	
 
 	/**
 	 * Display the view
@@ -51,12 +52,16 @@ class Routes_planningViewPlannings extends \Joomla\CMS\MVC\View\HtmlView
 		$this->activeFilters = $this->get('ActiveFilters');
 		$this->replaceRoutes = $this->get('ReplaceRoutes');
 		$this->sollRoutesInd = $this->get('SollRoutesInd');
+		$this->SollRoutesPercentBuidling = $this->get('SollRoutesPercentBuidling');
 
 		// Params
 		$this->params = $this->state->get('params');
 		$this->record_type = $this->params['record_type'];
+		$this->record_sector_or_building = $this->params['record_sector_or_building']; // Sollen die Sollwerte im Sektor oder Gebäude erfasst werden? 1=Gebäude 2=Sektor
 		$this->grade_start_individually = $this->params['grade_start_individually'];   // Einzelwerte - Niedrigster Schwierigkeitsgrad
 		$this->grade_end_individually = $this->params['grade_end_individually'];       // Einzelwerte - Höchster  Schwierigkeitsgrad
+		$this->grade_start_percent = $this->params['grade_start_percent'];       // Prozentwerte - Höchster  Schwierigkeitsgrad
+		$this->grade_end_percent = $this->params['grade_end_percent'];       // Prozentwerte - Höchster  Schwierigkeitsgrad
 
 		$grade_start = Routes_planningHelpersRoutes_planning::getFilterUiaa($this->grade_start_individually); // Wandelt den startwert um den Grad (z.B Start = 10 entspricht 3.Grad)
 		$grade_end = Routes_planningHelpersRoutes_planning::getFilterUiaa($this->grade_end_individually); 
@@ -79,19 +84,6 @@ class Routes_planningViewPlannings extends \Joomla\CMS\MVC\View\HtmlView
 		$this->ist_routes_data = json_encode($ist_routes_data);
 
 
-
-		// JSON für Soll-Werte Erfassung als einzelwerte
-		$sollgrade = [];
-		for ($i = $grade_start; $i <= $grade_end; $i++) {
-			$soll = "gradetotal$i";
-			$varname = 'soll_';
-			array_push($sollgrade,  $this->sollRoutesInd[0]->$soll);
- 		};
-		$this->totalsoll = array_sum($sollgrade);
-		$this->soll_routes_data = json_encode($sollgrade);
-
-		
-
 		// JSON für Label (Grad wird innerhalb Charts hinzugefügt)
 		$label_grade = [];
 			for ($i = $grade_start; $i <= $grade_end; $i++) {
@@ -100,10 +92,46 @@ class Routes_planningViewPlannings extends \Joomla\CMS\MVC\View\HtmlView
 		if(!empty($undefined)) {
 			array_push($label_grade, '?' );
 		};
-
 		$this->label_grade = json_encode($label_grade);
 
 
+
+		// Sollwerte abhängig von Auswahl Gebäude / Sektor -- Einzelwerte / Prozentwerte
+
+		if (1 == $this->record_sector_or_building) {
+            if(0 == $this->record_type) { 
+                 echo 'Gebäude Einzelwerterfassung fehlt'; // Gebäude Einzelwerterfassung
+            } else {
+                // Geböude Prozenterfassung
+				// JSON für Soll-Werte Erfassung als Prozentwerte/Gebäude (pb = percent building)
+				$sollgrade = [];
+				for ($i = $this->grade_start_percent; $i <= $this->grade_end_percent; $i++)
+				{
+					$soll = "grade$i";
+					$varname = 'soll_';
+					array_push($sollgrade,  $this->SollRoutesPercentBuidling[0]->$soll);
+				};
+					$this->totalsoll = array_sum($sollgrade);
+					$this->soll_routes_data = json_encode($sollgrade);
+            }; 
+        } else {
+            if(0 == $this->record_type) {
+                // Sektor Einzelwerterfassung
+				// JSON für Soll-Werte Erfassung als Einzelwerte/ Sektoren
+				$sollgrade = [];
+				for ($i = $grade_start; $i <= $grade_end; $i++) 
+				{
+					$soll = "gradetotal$i";
+					$varname = 'soll_';
+					array_push($sollgrade,  $this->sollRoutesInd[0]->$soll);
+				};
+				$this->totalsoll = array_sum($sollgrade);
+				$this->soll_routes_data = json_encode($sollgrade);
+
+            } else {
+                     echo 'Sektor Prozenterfassung fehlt '; // Sektor Prozenterfassung
+            };
+		}
 
 		// Check for errors.
 		if (count($errors = $this->get('Errors')))
@@ -114,6 +142,9 @@ class Routes_planningViewPlannings extends \Joomla\CMS\MVC\View\HtmlView
 		$this->_prepareDocument();
 		parent::display($tpl);
 	}
+
+
+
 
 	/**
 	 * Prepares the document

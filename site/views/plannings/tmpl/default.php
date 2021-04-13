@@ -68,8 +68,21 @@ $canEdit = Factory::getUser()->authorise('core.edit', 'com_act');
                 </div>
             </div> 
         </div>
+      
+        <?php if (1 == $this->record_sector_or_building) :  ?>
+            <?php  if(0 == $this->record_type) { 
+                        echo 'Gebäude Einzelwerterfassung fehlt'; // Gebäude Einzelweretrfassung
+                    } else {
+                        echo $this->loadTemplate('table_building_prozent'); // Geböude Prozenterfassung
+                    }; ?>
+        <?php else : ?>
+            <?php  if(0 == $this->record_type) {
+                        echo $this->loadTemplate('table_sektor_einzeln'); // Sektor Einzelwerterfassung
+                    } else {
+                        echo 'Sektor Prozenterfassung fehlt '; // Sektor Prozenterfassung
+                    }; ?>
+        <?php endif; ?>
 
-        <?php echo $this->loadTemplate('table_einzeln'); ?>
 
         <input type="hidden" name="task" value=""/>
         <input type="hidden" name="filter_order" value="<?php echo $listOrder; ?>"/>
@@ -183,5 +196,3 @@ $(document).ready( function () {
 
 <?php // Das PHP und JS für das Chart ?>
 <?php echo $this->loadTemplate('charts'); ?>
-
-

@@ -167,7 +167,7 @@ class Routes_planningModelPlannings extends \Joomla\CMS\MVC\Model\ListModel
 
 
 	/**
-	 * Soll Bestand
+	 * Soll Bestand Einzelwerterfassug Sektoren
 	 *
 	 * @return  mixed Array
 	 */
@@ -246,6 +246,45 @@ class Routes_planningModelPlannings extends \Joomla\CMS\MVC\Model\ListModel
         $filter_building = $this->state->get("filter.building");
             if ($filter_building != '') {
                $query->where($db->qn('building') .'=' . (int) $filter_building);
+            }
+ 
+        $db->setQuery($query);
+        $result = $db->loadObjectList();
+        
+        return $result;
+    }
+
+
+		/**
+	 * Soll Bestand Einzelwerterfassug Sektoren
+	 *
+	 * @return  mixed Array
+	 */
+    public function getSollRoutesPercentBuidling()
+    { 
+        $db    = $this->getDbo();
+        $query = $db->getQuery(true);
+        
+		$query->select(array('SUM(JSON_EXTRACT(a.routessoll, "$.g3")) as grade3',
+	                         'SUM(JSON_EXTRACT(a.routessoll, "$.g4")) as grade4',
+	                         'SUM(JSON_EXTRACT(a.routessoll, "$.g5")) as grade5',
+	                         'SUM(JSON_EXTRACT(a.routessoll, "$.g6")) as grade6',
+	                         'SUM(JSON_EXTRACT(a.routessoll, "$.g7")) as grade7',
+	                         'SUM(JSON_EXTRACT(a.routessoll, "$.g8")) as grade8',
+	                         'SUM(JSON_EXTRACT(a.routessoll, "$.g9")) as grade9',
+	                         'SUM(JSON_EXTRACT(a.routessoll, "$.g10")) as grade10',
+	                         'SUM(JSON_EXTRACT(a.routessoll, "$.g11")) as grade11',
+	                         'SUM(JSON_EXTRACT(a.routessoll, "$.g12")) as grade12',
+							),
+					  );
+        $query->from('#__act_building AS a');
+		     
+
+		
+		// Filtering building
+        $filter_building = $this->state->get("filter.building");
+            if ($filter_building != '') {
+               $query->where($db->qn('a.id') .'=' . (int) $filter_building);
             }
  
         $db->setQuery($query);
