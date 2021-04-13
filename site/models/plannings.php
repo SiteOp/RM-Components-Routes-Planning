@@ -265,16 +265,16 @@ class Routes_planningModelPlannings extends \Joomla\CMS\MVC\Model\ListModel
         $db    = $this->getDbo();
         $query = $db->getQuery(true);
         
-		$query->select(array('SUM(JSON_EXTRACT(a.routessoll, "$.g3")) as grade3',
-	                         'SUM(JSON_EXTRACT(a.routessoll, "$.g4")) as grade4',
-	                         'SUM(JSON_EXTRACT(a.routessoll, "$.g5")) as grade5',
-	                         'SUM(JSON_EXTRACT(a.routessoll, "$.g6")) as grade6',
-	                         'SUM(JSON_EXTRACT(a.routessoll, "$.g7")) as grade7',
-	                         'SUM(JSON_EXTRACT(a.routessoll, "$.g8")) as grade8',
-	                         'SUM(JSON_EXTRACT(a.routessoll, "$.g9")) as grade9',
-	                         'SUM(JSON_EXTRACT(a.routessoll, "$.g10")) as grade10',
-	                         'SUM(JSON_EXTRACT(a.routessoll, "$.g11")) as grade11',
-	                         'SUM(JSON_EXTRACT(a.routessoll, "$.g12")) as grade12',
+		$query->select(array('ROUND(SUM(JSON_EXTRACT(a.routessoll, "$.g3")),2) as grade3',
+	                         'ROUND(SUM(JSON_EXTRACT(a.routessoll, "$.g4")),2) as grade4',
+	                         'ROUND(SUM(JSON_EXTRACT(a.routessoll, "$.g5")),2) as grade5',
+							 'ROUND(SUM(JSON_EXTRACT(a.routessoll, "$.g6")),2) as grade6',
+	                         'ROUND(SUM(JSON_EXTRACT(a.routessoll, "$.g7")),2) as grade7',
+	                         'ROUND(SUM(JSON_EXTRACT(a.routessoll, "$.g8")),2) as grade8',
+	                         'ROUND(SUM(JSON_EXTRACT(a.routessoll, "$.g9")),2) as grade9',
+	                         'ROUND(SUM(JSON_EXTRACT(a.routessoll, "$.g10")),2) as grade10',
+	                         'ROUND(SUM(JSON_EXTRACT(a.routessoll, "$.g11")),2) as grade11',
+	                         'ROUND(SUM(JSON_EXTRACT(a.routessoll, "$.g12")),2) as grade12',
 							),
 					  );
         $query->from('#__act_building AS a');
