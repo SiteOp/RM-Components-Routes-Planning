@@ -31,9 +31,10 @@
               <option value="0">Einzelne Werte pro Routengrad</option>
               <option value="1">Prozentwerte pro Gesamtgrad</option>
     </field>
+    <field name="note11" type="note" label="Angabe der Grade - Beide Werte müssen identisch sein!!!" />
     <field name="grade_start_percent"
            type="number"
-           showon="record_type:1"
+           showon="record_should:1"
            default="3"
            label="SW-Grad Start (UIAA)"
            description="Welcher ist der niedrigste Grad in der Halle?"
@@ -42,7 +43,7 @@
     </field>
     <field name="grade_end_percent"
            type="number"
-           showon="record_type:1" 
+           showon="record_should:1"
            default="11"
            label="SW-Grad End (UIAA)"
            description="Welcher ist der höchste Grad in der Halle?"
@@ -51,7 +52,7 @@
     </field>
     <field name="grade_start_individually" 
            type="list" 
-           showon="record_type:0" 
+           showon="record_should:1"
            default="10" 
            label="SW-Grad Start (Conversion)"
            description="Welcher ist der niedrigste Grad in der Halle? 10 entspricht 3.Grad (Die Grade werden Konvertiert)">
@@ -62,7 +63,7 @@
     </field>
     <field name="grade_end_individually" 
            type="list" 
-           showon="record_type:0" 
+           showon="record_should:1"
            default="36" 
            label="SW-Grad Ende (Conversion)"
            description="Welcher ist der höchste Grad in der Halle?">

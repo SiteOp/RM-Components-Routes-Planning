@@ -115,4 +115,3 @@ $ist_total_grade = json_decode($this->ist_routes_data, true);
             </tbody>
         </table>
     </div>
-

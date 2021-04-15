@@ -265,21 +265,21 @@ class Routes_planningModelPlannings extends \Joomla\CMS\MVC\Model\ListModel
         $db    = $this->getDbo();
         $query = $db->getQuery(true);
         
-		$query->select(array('ROUND(SUM(JSON_EXTRACT(a.routessoll, "$.g3")),2) as grade3',
-	                         'ROUND(SUM(JSON_EXTRACT(a.routessoll, "$.g4")),2) as grade4',
-	                         'ROUND(SUM(JSON_EXTRACT(a.routessoll, "$.g5")),2) as grade5',
-							 'ROUND(SUM(JSON_EXTRACT(a.routessoll, "$.g6")),2) as grade6',
-	                         'ROUND(SUM(JSON_EXTRACT(a.routessoll, "$.g7")),2) as grade7',
-	                         'ROUND(SUM(JSON_EXTRACT(a.routessoll, "$.g8")),2) as grade8',
-	                         'ROUND(SUM(JSON_EXTRACT(a.routessoll, "$.g9")),2) as grade9',
-	                         'ROUND(SUM(JSON_EXTRACT(a.routessoll, "$.g10")),2) as grade10',
-	                         'ROUND(SUM(JSON_EXTRACT(a.routessoll, "$.g11")),2) as grade11',
-	                         'ROUND(SUM(JSON_EXTRACT(a.routessoll, "$.g12")),2) as grade12',
+		$query->select(array('ROUND(SUM(JSON_EXTRACT(a.routessoll, "$.g3")),1) as grade3',
+	                         'ROUND(SUM(JSON_EXTRACT(a.routessoll, "$.g4")),1) as grade4',
+	                         'ROUND(SUM(JSON_EXTRACT(a.routessoll, "$.g5")),1) as grade5',
+							 'ROUND(SUM(JSON_EXTRACT(a.routessoll, "$.g6")),1) as grade6',
+	                         'ROUND(SUM(JSON_EXTRACT(a.routessoll, "$.g7")),1) as grade7',
+	                         'ROUND(SUM(JSON_EXTRACT(a.routessoll, "$.g8")),1) as grade8',
+	                         'ROUND(SUM(JSON_EXTRACT(a.routessoll, "$.g9")),1) as grade9',
+	                         'ROUND(SUM(JSON_EXTRACT(a.routessoll, "$.g10")),1) as grade10',
+	                         'ROUND(SUM(JSON_EXTRACT(a.routessoll, "$.g11")),1) as grade11',
+	                         'ROUND(SUM(JSON_EXTRACT(a.routessoll, "$.g12")),1) as grade12',
 							),
 					  );
         $query->from('#__act_building AS a');
 		     
-
+		
 		
 		// Filtering building
         $filter_building = $this->state->get("filter.building");
@@ -320,7 +320,13 @@ class Routes_planningModelPlannings extends \Joomla\CMS\MVC\Model\ListModel
 			{
 				ArrayHelper::toInteger($filter_sector);
                 $query->where($db->qn('s.id') . 'IN (' . implode(',', $filter_sector).')');
-			}
+			};
+			
+		// Filtering building
+        $filter_building = $this->state->get("filter.building");
+            if ($filter_building != '') {
+               $query->where($db->qn('building') .'=' . (int) $filter_building);
+            }
  
         $db->setQuery($query);
         $result = $db->loadObjectList();

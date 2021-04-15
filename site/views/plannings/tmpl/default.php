@@ -29,6 +29,8 @@ $doc->addStyleSheet('https://cdn.datatables.net/buttons/1.6.5/css/buttons.dataTa
 $doc->addScript('node_modules/chart.js/dist/Chart.bundle.min.js');
 $doc->addScript('node_modules/chartjs-plugin-datalabels/dist/chartjs-plugin-datalabels.min.js');
 
+
+
 // Menüparameter - Titel usw
 $app = Factory::getApplication();
 $menu = $app->getMenu();
@@ -128,46 +130,15 @@ $.extend( true, $.fn.dataTable.defaults, {
 });
 </script>
 
-<script>
 
-let sectornames= jQuery('#filter_sector option:selected').toArray().map(item => item.text).join();
+<?php 
+// Wenn Einzelerfassung für Sektoren dann kann der PDF-Button und Excel in der Vergleichstabelle erstellt werden
+// Bei Prozentwerten nicht, da Datatables in der Tabelle nicht mit <td colspan""></td> funktioniert
 
-    $(document).ready( function () {
-        $('#compare_table').DataTable({
-            paging: false,
-            ordering:  false,
-            "language": {
-                "info": "",
-            },
-            buttons: [
-            {
-                extend: 'excelHtml5',
-                messageTop: sectornames,
-                exportOptions: { 
-                    format: {
-                        header: function ( data, column, row ){
-                            return data.substring(data.indexOf("value")+9,data.indexOf("</option"));
-                        }
-                    }
-                }
-            },
-            {
-                extend: 'pdfHtml5',
-                orientation: 'landscape',
-                messageTop: sectornames,
-                title: "<?php echo Text::_('COM_ROUTES_PLANNING_SHOULD_IS_COMPARISON'); ?>",
-                exportOptions: { 
-                    format: {
-                        header: function ( data, column, row ){
-                            return data.substring(data.indexOf("value")+9,data.indexOf("</option"));
-                        }
-                    }
-                }     
-            }
-            ]
-        });
-    });
-</script>
+if((0 == $this->record_type) && (2 == $this->record_sector_or_building)) {
+    echo $this->loadTemplate('compare_table_js');
+}
+?>
 
 <script>
 $(document).ready( function () {
