@@ -94,20 +94,19 @@ $ist_total_grade = json_decode($this->ist_routes_data, true);
                             } else {
                                 echo "'3'";
                             }
-                            ?>
-                             <?php 
-                            if(($this->SollRoutesPercentBuidling[0]->$grade -$ist_total_grade[$index]) < 0) {
-                                echo 'class="diff_minus"';
-                            } 
-                            elseif (($this->SollRoutesPercentBuidling[0]->$grade -$ist_total_grade[$index]) > 0) {
+                            ?> <?php  $grade = "grade$i"; ?>
+                             <?php $wert =($ist_total_grade[$index] -$this->SollRoutesPercentBuidling[0]->$grade); 
+                            if($wert > 0) {
                                 echo 'class="diff_plus"';
+                            } 
+                            elseif ($wert < 0) {
+                                echo 'class="diff_minus"';
                             }
                             else {
                                 echo '';
                             }; ?>
                         >
-                        <?php  $grade = "grade$i"; ?>
-                        <?php echo ($this->SollRoutesPercentBuidling[0]->$grade -$ist_total_grade[$index]); ?>
+                        <?php echo $wert; ?>
                         <?php ++$index; ?>
                         </td>
                     <?php endfor; ?>
