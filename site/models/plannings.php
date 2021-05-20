@@ -146,7 +146,7 @@ class Routes_planningModelPlannings extends \Joomla\CMS\MVC\Model\ListModel
 		      ->join('LEFT', '#__act_trigger_calc AS t ON t.id = a.id') // VIEW TABLE
 			  ->join('LEFT', '#__act_line AS l ON l.id = a.line')
 			  ->join('LEFT', '#__act_sector AS s ON s.id = l.sector')
-			  ->where('a.state IN (1,-1)'); // Status Veröffentlicht und in Planung
+			  ->where('a.state = 1');
 
 		// Filtering sector
 		$filter_sector = $this->state->get("filter.sector");
