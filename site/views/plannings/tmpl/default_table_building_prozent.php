@@ -33,14 +33,25 @@ $ist_total_grade = json_decode($this->ist_routes_data, true);
             </thead>
             <tbody>
                 <tr>
-                    <td><?php echo Text::_('COM_ROUTES_PLANNING_IS'); ?></td>
+                <td>
+                        <a class="" rel="popover" 
+                           data-placement="right" 
+                           data-html="true" 
+                           data-trigger="hover" 
+                           title="" 
+                           data-content="<?php echo Text::_('COM_ROUTES_PLANNING_PLAN_INFO'); ?>" 
+                           data-original-title="<?php echo Text::_('COM_ROUTES_PLANNING_PLAN'); ?>">
+                           <i class="fas fa-info-circle"></i>
+                         </a>
+                         <?php echo Text::_('COM_ROUTES_PLANNING_PLAN_ABK'); ?>
+                    </td>
                     <?php for($i = $grade_start; $i <= $grade_end; $i++) : ?>
                         <?php  $ist = "ist_grade_$i"; ?>
                         <td><?php echo $this->items[0]->$ist; ?></td>
                     <?php endfor; ?>
                 </tr>
                 <tr>
-                    <td><?php echo Text::_('COM_ROUTES_PLANNING_IS'); ?></td>
+                    <td> <?php echo Text::_('COM_ROUTES_PLANNING_PLAN_ABK'); ?></td>
                   <?php $index = 0; ?>
                     <?php for ($i= $gs; $i <=$ge; $i++) : ?>
                         <td colspan= 
