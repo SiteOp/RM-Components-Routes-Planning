@@ -95,7 +95,7 @@ $canEdit = Factory::getUser()->authorise('core.edit', 'com_act');
     </form>
 
     <div class="row mt-5">
-        <div class="col-6">
+        <div class="col">
             <p class="mb-3"><b><?php echo Text::_('COM_ROUTES_PLANNING_PLANNED_TO_REPLACE'); ?></b></p>
             <?php echo $this->loadTemplate('replaceroutes'); ?>
         </div>
