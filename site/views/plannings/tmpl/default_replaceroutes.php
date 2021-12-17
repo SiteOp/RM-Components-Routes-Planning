@@ -41,7 +41,7 @@ $holds_manufacturer   = $params['holds_manufacturer']; // Soll die Spalte Griffh
                         <a href="<?php echo Route::_('index.php?option=com_act&view=route&id='.(int) $route->id); ?>"><?php echo $this->escape($route->name); ?></a>
                     </td>
                    
-                    <td class="text-center"><?php echo $this->escape($route->uiaa); ?></td>
+                    <td class="text-center" data-order="<?php echo $this->escape($route->calc_grade_round); ?>"><?php echo $this->escape($route->uiaa); ?></td>
                     <td><?php echo $this->escape($route->color); ?></td>
                     <?php if (1 == $holds_manufacturer) : ?>
                         <td><?php echo Routes_planningHelpersRoutes_planning::getHoldManufacturer($this->escape($route->extend_sql)); ?></td>

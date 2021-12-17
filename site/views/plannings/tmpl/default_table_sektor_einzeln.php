@@ -17,8 +17,9 @@ $grade_start = $this->grade_start_individually;
 $grade_end = $this->grade_end_individually;
 
 ?> 
+
     <div class="table-responsive mt-5">
-        <table id="compare_table" class="display table table-sm table-striped table-bordered text-center" style="width:100%"  >
+        <table id="compare_table" class="display table table-sm  table-bordered text-center" style="width:100%"  >
             <thead>
                 <tr>
                     <th><?php echo Text::_('COM_ROUTES_PLANNING_GRADE'); ?></th>
@@ -28,50 +29,82 @@ $grade_end = $this->grade_end_individually;
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td><?php echo Text::_('COM_ROUTES_PLANNING_SHOULD'); ?></td>
+      
+                
+                <tr><?php // Sollbestand ?>
+                    <td><?php echo Text::_('COM_ROUTES_PLANNING_SHOULD'); ?></td> 
                     <?php for($i = $grade_start; $i <= $grade_end; $i++) : ?>
                         <?php  $grade = "grade$i"; ?>
                         <td><?php echo $this->sollRoutesInd[0]->$grade; ?></td>
                     <?php endfor; ?>
                 </tr>
-                <tr>
-                    <td>
+
+
+                <tr><?php // Istbestand ?>
+                    <td><?php echo Text::_('COM_ROUTES_PLANNING_IS'); ?></td>
+                    <?php for($i = $grade_start; $i <= $grade_end; $i++) : ?>
+                        <?php  $ist = "ist_grade_$i"; ?>
+                        <td>
+                            <?php echo $this->items[0]->$ist; ?>
+                        </td>
+                    <?php endfor; ?>
+                </tr>
+
+                <tr> <?php // Vorgemerkt zum Heruasschrauben - Comes Out ?>
+                    <td class="table_border_bottom">
                         <a class="" rel="popover" 
                            data-placement="right" 
                            data-html="true" 
                            data-trigger="hover" 
                            title="" 
-                           data-content="<?php echo Text::_('COM_ROUTES_PLANNING_PLAN_INFO'); ?>" 
-                           data-original-title="<?php echo Text::_('COM_ROUTES_PLANNING_PLAN'); ?>">
+                           data-content="<?php echo Text::_('COM_ROUTES_PLANNING_COMES_OUT_DESC'); ?>" 
+                           data-original-title="<?php echo Text::_('COM_ROUTES_PLANNING_COMES_OUT_INFO'); ?>">
                            <i class="fas fa-info-circle"></i>
                          </a>
-                         <?php echo Text::_('COM_ROUTES_PLANNING_PLAN_ABK'); ?>
+                         <?php echo Text::_('COM_ROUTES_PLANNING_COMES_OUT_ABK'); ?>
                     </td>
                     <?php for($i = $grade_start; $i <= $grade_end; $i++) : ?>
-                        <?php  $ist = "ist_grade_$i"; ?>
-                        <td><?php echo $this->items[0]->$ist; ?></td>
+                        <?php $comes_out = "comes_out_grade_$i"; ?>
+                        <td class="table_border_bottom">
+                            <?php echo $this->routesComesOut[0]->$comes_out; ?>
+                        </td>
                     <?php endfor; ?>
                 </tr>
-                <tr>
-                    <td><?php echo Text::_('COM_ROUTES_PLANNING_DIFF'); ?></td>
+
+                <tr class="table-light"> <?php // ToDo-Liste aus Sollbestand Minus (Ist-Bestand Minus Kommt raus) ?>
+                    <td>
+                      <a class="" rel="popover" 
+                           data-placement="right" 
+                           data-html="true" 
+                           data-trigger="hover" 
+                           title="" 
+                           data-content="<?php echo Text::_('COM_ROUTES_PLANNING_TODO_DESC'); ?>" 
+                           data-original-title="<?php echo Text::_('COM_ROUTES_PLANNING_TODO_INFO'); ?>">
+                           <i class="fas fa-info-circle"></i>
+                         </a>
+                        <?php echo Text::_('COM_ROUTES_PLANNING_TODO'); ?>
+                    </td>
                     <?php for($i = $grade_start; $i <= $grade_end; $i++) : ?>
                         <?php  $grade = "grade$i"; ?>
                         <?php  $ist = "ist_grade_$i"; ?>
+                        <?php  $comes_out = "comes_out_grade_$i"; ?>
                         <?php 
-                        if(($this->items[0]->$ist - $this->sollRoutesInd[0]->$grade) < 0) {
+                        if($this->sollRoutesInd[0]->$grade - ($this->items[0]->$ist -$this->routesComesOut[0]->$comes_out) < 0) {
                             echo '<td class="diff_minus">';
                         } 
-                        elseif (($this->items[0]->$ist - $this->sollRoutesInd[0]->$grade) > 0) {
+                        elseif ($this->sollRoutesInd[0]->$grade - ($this->items[0]->$ist -$this->routesComesOut[0]->$comes_out) > 0) {
                             echo '<td class="diff_plus">';
                         }
                         else {
                             echo '<td>';
                         }; ?>
-                        <?php echo ($this->items[0]->$ist - $this->sollRoutesInd[0]->$grade); ?>
+                        <?php echo ($this->sollRoutesInd[0]->$grade - ($this->items[0]->$ist -$this->routesComesOut[0]->$comes_out)); ?>
                         </td>
                     <?php endfor; ?>
                 </tr>
             </tbody>
+            <tfoot>
+
+            </tfoot>
         </table>
     </div>

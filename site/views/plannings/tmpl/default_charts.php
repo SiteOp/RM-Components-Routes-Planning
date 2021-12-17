@@ -11,7 +11,6 @@ defined('_JEXEC') or die;
 
 use Joomla\CMS\Language\Text;
 
-
 ?> 
 <script>
 Chart.helpers.merge(Chart.defaults.global.plugins.datalabels, {
@@ -38,7 +37,13 @@ new Chart(document.getElementById("bar-chart-grouped"), {
       label: "<?php echo Text::_('COM_ROUTES_PLANNING_IS'); ?>",
       backgroundColor: "#019abc",
       data: <?php echo $this->ist_routes_data; ?>
-    }]
+    },
+    {
+      label: "<?php echo Text::_('Vorgemerkt'); ?>",
+      backgroundColor: "#fab903",
+      data: <?php echo $this->comes_out_routes_data; ?>
+    }
+  ]
   },
   // Abstand von Legend nach unten 3.Grade ...
   plugins: [{

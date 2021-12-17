@@ -47,11 +47,12 @@ class Routes_planningViewPlannings extends \Joomla\CMS\MVC\View\HtmlView
 
 		$this->state = $this->get('State');
 
-		$this->items   = $this->get('Items');
+		$this->items   = $this->get('Items'); // Ist-Bestand Status 1 + -1 
+		$this->routesComesOut = $this->get('RoutesComesOut');
 		$this->filterForm = $this->get('FilterForm');
 		$this->activeFilters = $this->get('ActiveFilters');
-		$this->replaceRoutes = $this->get('ReplaceRoutes');
-		$this->sollRoutesInd = $this->get('SollRoutesInd');
+		$this->replaceRoutes = $this->get('ReplaceRoutes'); // Liste von Vorgemerkte Routen (Name, Linie, Sektor....)
+		$this->sollRoutesInd = $this->get('SollRoutesInd'); // Individuell = Einzelwert
 		$this->SollRoutesPercentBuidling = $this->get('SollRoutesPercentBuidling');
 
 		// Params
@@ -69,7 +70,7 @@ class Routes_planningViewPlannings extends \Joomla\CMS\MVC\View\HtmlView
 		// CHARTS
 		$undefined = $this->items[0]->ist_undefined; // Routen ohne Routengrad z. B Speedrouten 
 
-		// JSON für IST-Werte 
+		// JSON für IST-Werte (Status 1 und -1)
 		$ist_routes_data = [];
 		for ($i = $grade_start; $i <= $grade_end; $i++) {
 			$ist = "ist_gradetotal$i";
@@ -82,6 +83,22 @@ class Routes_planningViewPlannings extends \Joomla\CMS\MVC\View\HtmlView
 		};
 
 		$this->ist_routes_data = json_encode($ist_routes_data);
+
+
+
+		// JSON für Vorgemerkte Routen
+		$comes_out_routes_data = [];
+		for ($i = $grade_start; $i <= $grade_end; $i++) {
+			$comes_out = "comes_out_gradetotal$i";
+			$varname = 'comes_out_';
+			array_push($comes_out_routes_data,$this->routesComesOut[0]->$comes_out);
+		}
+
+		if(!empty($undefined)) {
+			array_push($comes_out_routes_data, $undefined );
+		};
+
+		$this->comes_out_routes_data = json_encode($comes_out_routes_data);
 
 
 		// JSON für Label (Grad wird innerhalb Charts hinzugefügt)

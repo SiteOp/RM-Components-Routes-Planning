@@ -22,14 +22,23 @@ HTMLHelper::_('formbehavior.chosen', 'select');
 
 // CSS Datatables Variante Bootstrap 4
 $doc = Factory::getDocument();
-$doc->addStyleSheet('https://cdn.datatables.net/v/bs4/dt-1.10.23/datatables.min.css');
-$doc->addStyleSheet('https://cdn.datatables.net/buttons/1.6.5/css/buttons.dataTables.min.css');
+//$doc->addStyleSheet('https://cdn.datatables.net/v/bs4/dt-1.10.23/datatables.min.css');
+//$doc->addStyleSheet('https://cdn.datatables.net/buttons/1.6.5/css/buttons.dataTables.min.css');
+//$doc->addStyleSheet('https://cdn.datatables.net/v/dt/jszip-2.5.0/dt-1.11.3/b-2.1.1/b-html5-2.1.1/datatables.min.css');
+$doc->addStyleSheet('node_modules/datatables.net-dt/css/jquery.dataTables.min.css');
+$doc->addStyleSheet('node_modules/datatables.net-buttons-dt/css/buttons.dataTables.min.css');
 
-// Add Script 
+// Add Script Charts
 $doc->addScript('node_modules/chart.js/dist/Chart.bundle.min.js');
 $doc->addScript('node_modules/chartjs-plugin-datalabels/dist/chartjs-plugin-datalabels.min.js');
 
-
+// Add Script Charts Databables
+$doc->addScript("node_modules/datatables.net/js/jquery.dataTables.min.js"); 
+$doc->addScript("node_modules/datatables.net-buttons/js/dataTables.buttons.min.js");
+$doc->addScript("node_modules/jszip/dist/jszip.min.js");
+$doc->addScript("node_modules/pdfmake/build/pdfmake.min.js");
+$doc->addScript("node_modules/pdfmake/build/vfs_fonts.js");
+$doc->addScript("node_modules/datatables.net-buttons/js/buttons.html5.min.js");
 
 // Menüparameter - Titel usw
 $app = Factory::getApplication();
@@ -65,7 +74,7 @@ $canEdit = Factory::getUser()->authorise('core.edit', 'com_act');
                             <canvas id="bar-chart-grouped" width="" height="60"></canvas>
                             <div class="text-center">
                            <span class="mr-2"> Soll: <?php echo $this->totalsoll; ?> </span> |
-                           <span class="mr-2 ml-2 "> Ist: <?php echo ($this->items[0]->totalroutes + count($this->replaceRoutes)) ; ?> </span> |
+                           <span class="mr-2 ml-2 "> Ist: <?php echo ($this->items[0]->totalroutes) ; ?> </span> |
                            <span class="ml-2"> Vorgemerkt: <?php echo count($this->replaceRoutes); ?></span> 
                             </div>
                     </div>
@@ -102,14 +111,6 @@ $canEdit = Factory::getUser()->authorise('core.edit', 'com_act');
     </div>
 </div>
 
-<?php // https://datatables.net/download ?>
-<script src="https://cdn.datatables.net/v/bs4/dt-1.10.23/datatables.min.js" ></script>
-<?php // Script für Buttons ?>
-<script src="node_modules/datatables.net-buttons/js/dataTables.buttons.min.js" ></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js" ></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js" ></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js" ></script>
-<script src="https://cdn.datatables.net/buttons/1.6.5/js/buttons.html5.min.js" ></script>
 
 <script>
 $.extend( true, $.fn.dataTable.defaults, {
@@ -140,6 +141,7 @@ $.extend( true, $.fn.dataTable.defaults, {
 if((0 == $this->record_type) && (2 == $this->record_sector_or_building)) {
     echo $this->loadTemplate('compare_table_js');
 }
+
 ?>
 
 <script>
@@ -149,7 +151,7 @@ $(document).ready( function () {
              "info":        " _TOTAL_ <?php echo Text::_('COM_ROUTES_PLANNING_ROUTES'); ?>",
              "emptyTable":  "<?php echo Text::_('COM_ROUTES_PLANNING_NO_PLANNED_TO_REPLACE'); ?>",
             },
-        "lengthMenu": [[5, 10, -1], [5, 10, "All"]],
+        "lengthMenu": [[10, 15, 20, -1], [10, 15, 20, "All"]],
         buttons: [
             {
                 extend: 'excelHtml5',
