@@ -22,23 +22,26 @@ HTMLHelper::_('formbehavior.chosen', 'select');
 
 // CSS Datatables Variante Bootstrap 4
 $doc = Factory::getDocument();
-//$doc->addStyleSheet('https://cdn.datatables.net/v/bs4/dt-1.10.23/datatables.min.css');
-//$doc->addStyleSheet('https://cdn.datatables.net/buttons/1.6.5/css/buttons.dataTables.min.css');
-//$doc->addStyleSheet('https://cdn.datatables.net/v/dt/jszip-2.5.0/dt-1.11.3/b-2.1.1/b-html5-2.1.1/datatables.min.css');
-$doc->addStyleSheet('node_modules/datatables.net-dt/css/jquery.dataTables.min.css');
-$doc->addStyleSheet('node_modules/datatables.net-buttons-dt/css/buttons.dataTables.min.css');
+//$doc->addStyleSheet('node_modules/datatables.net-dt/css/jquery.dataTables.min.css');
+$doc->addStyleSheet('https://cdn.datatables.net/1.13.1/css/jquery.dataTables.min.css');
+//$doc->addStyleSheet('node_modules/datatables.net-buttons-dt/css/buttons.dataTables.min.css');
+$doc->addStyleSheet('https://cdn.datatables.net/buttons/2.3.3/css/buttons.dataTables.min.css');
 
 // Add Script Charts
 $doc->addScript('node_modules/chart.js/dist/Chart.bundle.min.js');
 $doc->addScript('node_modules/chartjs-plugin-datalabels/dist/chartjs-plugin-datalabels.min.js');
 
 // Add Script Charts Databables
-$doc->addScript("node_modules/datatables.net/js/jquery.dataTables.min.js"); 
-$doc->addScript("node_modules/datatables.net-buttons/js/dataTables.buttons.min.js");
-$doc->addScript("node_modules/jszip/dist/jszip.min.js");
+//$doc->addScript("node_modules/datatables.net/js/jquery.dataTables.min.js"); 
+$doc->addScript("https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"); 
+//$doc->addScript("node_modules/datatables.net-buttons/js/dataTables.buttons.min.js");
+$doc->addScript("https://cdn.datatables.net/buttons/2.3.3/js/dataTables.buttons.min.js");
+//$doc->addScript("node_modules/jszip/dist/jszip.min.js");
+$doc->addScript("https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js");
 $doc->addScript("node_modules/pdfmake/build/pdfmake.min.js");
 $doc->addScript("node_modules/pdfmake/build/vfs_fonts.js");
-$doc->addScript("node_modules/datatables.net-buttons/js/buttons.html5.min.js");
+//$doc->addScript("node_modules/datatables.net-buttons/js/buttons.html5.min.js");
+$doc->addScript("https://cdn.datatables.net/buttons/2.3.2/js/buttons.html5.min.js");
 
 // Menüparameter - Titel usw
 $app = Factory::getApplication();

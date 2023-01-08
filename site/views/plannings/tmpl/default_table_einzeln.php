@@ -13,8 +13,8 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\HTML\HTMLHelper;
 
-$grade_start = $this->grade_start_individually; 
-$grade_end = $this->grade_end_individually;
+$grade_start = 10; //$this->grade_start_individually; 
+$grade_end = 30; //$this->grade_end_individually;
 
 ?> 
     <div class="table-responsive mt-5">

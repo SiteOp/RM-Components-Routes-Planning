@@ -31,6 +31,8 @@
               <option value="0">Einzelne Werte pro Routengrad</option>
               <option value="1">Prozentwerte pro Gesamtgrad</option>
     </field>
+
+    <!--
     <field name="note11" type="note" label="Angabe der Grade - Beide Werte müssen identisch sein!!!" />
     <field name="grade_start_percent"
            type="number"
@@ -50,6 +52,7 @@
            min="7"
            max="12">
     </field>
+
     <field name="grade_start_individually" 
            type="list" 
            showon="record_should:1"
@@ -61,6 +64,19 @@
             <option value="15">5</option>
             <option value="18">6</option> 
     </field>
+
+
+    <field name="grade_start_individually" 
+           type="number" 
+           showon="record_should:1"
+           default="10" 
+           label="Niedrigster Grade. (id_grade)" 
+           description="Einzugeben ist die aus der Tabelle der Schwierigkeitsgrade die kleinste Zahl aus der Spalte id_grade oder id_grade_zwg usw" 
+           min="10" 
+           max="25" 
+           step="1" />
+
+    
     <field name="grade_end_individually" 
            type="list" 
            showon="record_should:1"
@@ -71,7 +87,9 @@
             <option value="32">10</option>
             <option value="35">11</option>
             <option value="36">12</option> 
-    </field>   
+    </field>
+    -->
+    
   </fieldset>
 
   <fieldset name="permissions" description="JCONFIG_PERMISSIONS_DESC" label="JCONFIG_PERMISSIONS_LABEL">

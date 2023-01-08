@@ -13,6 +13,7 @@ JLoader::register('Routes_planningHelper', JPATH_ADMINISTRATOR . DIRECTORY_SEPAR
 
 use \Joomla\CMS\Factory;
 use \Joomla\CMS\MVC\Model\BaseDatabaseModel;
+use \Joomla\Utilities\ArrayHelper;
 
 /**
  * Class Routes_planningFrontendHelper
@@ -110,6 +111,35 @@ class Routes_planningHelpersRoutes_planning
 		$db->setQuery($query);
 		return $db->loadResult();
 	}
+
+
+	/**
+	 * Wie lautet der Filter?
+	 * Ausgabe als Grad
+	 *
+	 * @param   int     
+	 *
+	 * @return  string 
+	 */
+	public static function getGradeFilter($id_grade)
+	{
+		$params       = JComponentHelper::getParams('com_act');
+		$grade_table = $params['grade_table'];  // Welche Tabelle für Schwierigkeitsgrade
+
+		$id_grade = (int) filter_var($id_grade, FILTER_SANITIZE_NUMBER_INT);  // Entferne grade aus der Variable damit nur die ID des Grades bleibt aus grade12 wird 12
+
+		$db = Factory::getDbo();
+		$query = $db->getQuery(true);
+
+		$query->select('filter')
+			->from('#__'.$grade_table)
+			->where('id_grade = ' . (int) $id_grade);
+
+		$db->setQuery($query);
+		return $db->loadResult();
+	}
+
+
 
     /**
      * Gets the edit permission for an user
