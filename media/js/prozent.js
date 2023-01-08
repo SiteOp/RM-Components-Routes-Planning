@@ -154,9 +154,9 @@
         }],
         options: {
             layout: {
-                padding: {left: 78}
+                padding: {left: 0}
             },
-            legend: { display: false },
+            legend: { display: false},
             animation: {duration: 0 },
             hover: { animationDuration: 0 },
             responsiveAnimationDuration: 0 ,
@@ -167,6 +167,7 @@
                             display: true,
                             labelString: 'Anzahl Routen',
                             fontSize: 18
+							
                     }
                 }]
             }
@@ -183,19 +184,19 @@
 		// Erstelle ein Array aus den Readonly-Fields 
 		let arrayRoutes = [];    
 		$( "#allroutes input" ).each(function( index ) {
-			arrayRoutes.push($( this ).val());
+			arrayRoutes.push($(this).val());
 		  });
 
 		// Erstelle das Array für die Label
 		let arrayLabel = [];    
 		$( "#gradelabel label" ).each(function( index ) {
-			arrayLabel.push($( this ).text());
+			arrayLabel.push($(this).text());
 		});
 	
 		// Erstelle das Array für die Farben
 		let arrayColor = [];    
 		$( "#gradelabel label" ).each(function( index ) {
-			arrayColor.push($( this ).css("border-top-color"));
+			arrayColor.push($(this).css("border-color"));
 		});
 
         let dataObj =  arrayRoutes;

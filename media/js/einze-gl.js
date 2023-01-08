@@ -1,5 +1,4 @@
 
-
   // Funktion zum berechnen der Summe 
   (function( $ ){ 
         $.fn.sum=function () {
@@ -29,57 +28,40 @@
 		let density = (parseFloat(routestotal/total_line).toFixed(1)); // Routendichte berechnen
 		$('#density').text(check(density));				   // Routendichte eintragen
 
-		let g10  = check($('#routesoll10').val());  // grade10 = 3
-		let g11  = check($('#routesoll11').val());
-		let g12  = check($('#routesoll12').val());
-		let g13  = check($('#routesoll13').val());
-		let g14  = check($('#routesoll14').val());
-		let g15  = check($('#routesoll15').val());
-		let g16  = check($('#routesoll16').val());
-		let g17  = check($('#routesoll17').val());
-		let g18  = check($('#routesoll18').val());
-		let g19  = check($('#routesoll19').val()); 
-		let g20  = check($('#routesoll20').val());
-		let g21  = check($('#routesoll21').val());
-		let g22  = check($('#routesoll22').val());
-		let g23  = check($('#routesoll23').val());
-		let g24  = check($('#routesoll24').val());
-		let g25  = check($('#routesoll25').val());
-		let g26  = check($('#routesoll26').val());
-		let g27  = check($('#routesoll27').val());
-		let g28  = check($('#routesoll28').val());
-		let g29  = check($('#routesoll29').val());
-		let g30  = check($('#routesoll30').val());
-		let g31  = check($('#routesoll31').val());
-		let g32  = check($('#routesoll32').val());
-		let g33  = check($('#routesoll33').val());
-		let g34  = check($('#routesoll34').val());
-		let g35  = check($('#routesoll35').val());
-		let g36  = check($('#routesoll36').val());
-		let g37  = check($('#routesoll37').val());
-		let g38  = check($('#routesoll38').val());
-		let g39  = check($('#routesoll39').val());
-		let g40  = check($('#routesoll40').val());
-		let g41  = check($('#routesoll41').val());
-		let g42  = check($('#routesoll42').val());
-		let g43  = check($('#routesoll43').val());
-		let g44  = check($('#routesoll44').val());
-		let g45  = check($('#routesoll45').val());
-		let g46  = check($('#routesoll46').val());
-		let g47  = check($('#routesoll47').val());
-		let g48  = check($('#routesoll48').val());
-		let g49  = check($('#routesoll49').val());
-		let g50  = check($('#routesoll50').val());
-		let g51  = check($('#routesoll51').val());
-		let g52  = check($('#routesoll52').val());
-		let g53  = check($('#routesoll53').val());
-
+		let route10  = check($('#routesoll10').val());  
+		let route11  = check($('#routesoll11').val());
+		let route12  = check($('#routesoll12').val());
+		let route13  = check($('#routesoll13').val());
+		let route14  = check($('#routesoll14').val());
+		let route15  = check($('#routesoll15').val());
+		let route16  = check($('#routesoll16').val());
+		let route17  = check($('#routesoll17').val());
+		let route18  = check($('#routesoll18').val());
+		let route19  = check($('#routesoll19').val());
+		let route20  = check($('#routesoll20').val());
+		let route21  = check($('#routesoll21').val());
+		let route22  = check($('#routesoll22').val());
+		let route23  = check($('#routesoll23').val());
+		let route24  = check($('#routesoll24').val());
+		let route25  = check($('#routesoll25').val());
+		let route26  = check($('#routesoll26').val());
+		let route27  = check($('#routesoll27').val());
+		let route28  = check($('#routesoll28').val());
+		let route29  = check($('#routesoll29').val());
+		let route30  = check($('#routesoll30').val());
+		let route31  = check($('#routesoll31').val());
+		let route32  = check($('#routesoll32').val());
+		let route33  = check($('#routesoll33').val());
+		let route34  = check($('#routesoll34').val());
+		let route35  = check($('#routesoll35').val());
+		let route36  = check($('#routesoll36').val());
 
 		// Erstelle ein Object mit den Werten Grad und Routenanzahl
-		let obj_routes = {g10,g11,g12,g13,g14,g15,g16,g17,g18,g19,g20,g21,g22,g23,g24,g25,g26,g27,g28,g29,g30,g31,g32,g33,g34,g35,g36,g37,g38,g39,g40,g41,g42,g43,g44,g45,g46,g47,g48,g49,g50,g51,g52,g53};
+		let obj_routes = {'g10':route10, 'g11':route11,'g12':route12,'g13':route13, 'g14':route14, 'g15': route15,'g16': route16,'g17': route17,'g18': route18,'g19':route19,
+                          'g20': route20,'g21': route21,'g22': route22,'g23':route23, 'g24':route24,'g25':route25,'g26':route26,'g27':route27,'g28':route28,'g29':route29,
+                          'g30':route30,'g31':route31,'g32':route32,'g33':route33,'g34':route34,'g35':route35,'g36':route36};
 		let json_routes = JSON.stringify(obj_routes);	// Konvertierung  JS object to JSON string
 		$('#routessoll_ind').val(json_routes);  	   // Werte als Value des Hidden Fields routessoll_ind verwenden
-        
 	};
 
     // Beim ersten Laden Daten berechnen
