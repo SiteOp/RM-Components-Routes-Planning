@@ -52,12 +52,13 @@ class Routes_planningViewPlannings extends \Joomla\CMS\MVC\View\HtmlView
 		$this->activeFilters  = $this->get('ActiveFilters');
 
 		$this->routesComesOut = $this->get('RoutesComesOut'); 
-		//$this->routesComesOutNotZwg = $this->get('RoutesComesOutNotZwg'); 
+		$this->routesComesOutTotal = $this->get('RoutesComesOutGradeTotal'); 
 		$this->replaceRoutes  = $this->get('ReplaceRoutes'); // Liste von Vorgemerkte Routen (Routenname, Linie, Sektor....)
 
 		$this->sollRoutesInd  = $this->get('SollRoutesInd'); // Individuell = Einzelwert
 		$this->SollRoutesPercentBuidling = $this->get('SollRoutesPercentBuidling');
 
+		
 		// Params
 		$this->params 	   = $this->state->get('params');
 		$this->record_type = $this->params['record_type'];
@@ -68,6 +69,13 @@ class Routes_planningViewPlannings extends \Joomla\CMS\MVC\View\HtmlView
 		JLoader::import('helpers.grade', JPATH_SITE.DIRECTORY_SEPARATOR.'components'.DIRECTORY_SEPARATOR.'com_act');
 		$this->gradeList   = GradeHelpersGrade::getGradeListPlanning(); // JSON String der Grade
 
+
+		// Liste der zusammengefassten Routengrade aus [3, 3+, 4-...] wird [3,4]
+		foreach($this->gradeList as $value) {
+   			$gradeListShort[] = intval($value->grade);
+		}
+		$this->$gradeListShort = array_unique($gradeListShort);
+
 		###################### CHARTS ###########################
 		/**
 		 * Soll-Bestand Total
@@ -77,22 +85,35 @@ class Routes_planningViewPlannings extends \Joomla\CMS\MVC\View\HtmlView
 		 * Anschließend wird ein neues Array erstellt
 		 * Output JSON für Charts
 		*/
-		foreach($this->sollRoutesInd[0] AS $grade_id => $value) {
-			if(Routes_planningHelpersRoutes_planning::getGradeFilter($grade_id) ==  3) {$grade3  = $grade3  +$value;}
-			if(Routes_planningHelpersRoutes_planning::getGradeFilter($grade_id) ==  4) {$grade4  = $grade4  +$value;}
-			if(Routes_planningHelpersRoutes_planning::getGradeFilter($grade_id) ==  5) {$grade5  = $grade5  +$value;}
-			if(Routes_planningHelpersRoutes_planning::getGradeFilter($grade_id) ==  6) {$grade6  = $grade6  +$value;}
-			if(Routes_planningHelpersRoutes_planning::getGradeFilter($grade_id) ==  7) {$grade7  = $grade7  +$value;}
-			if(Routes_planningHelpersRoutes_planning::getGradeFilter($grade_id) ==  8) {$grade8  = $grade8  +$value;}
-			if(Routes_planningHelpersRoutes_planning::getGradeFilter($grade_id) ==  9) {$grade9  = $grade9  +$value;}
-			if(Routes_planningHelpersRoutes_planning::getGradeFilter($grade_id) == 10) {$grade10 = $grade10 +$value;}
-			if(Routes_planningHelpersRoutes_planning::getGradeFilter($grade_id) == 11) {$grade11 = $grade11 +$value;}
-			if(Routes_planningHelpersRoutes_planning::getGradeFilter($grade_id) == 12) {$grade12 = $grade12 +$value;}
-		}
-		$this->soll_routes_data = array($grade3,$grade4,$grade5,$grade6,$grade7,$grade8,$grade9,$grade10,$grade11,$grade12);
-		$this->totalsoll = array_sum($this->soll_routes_data); // Gesamtsummer des Soll-Bestandes
-		$this->soll_routes_data = json_encode($this->soll_routes_data);
 
+		// Sollbestand Einzelwerte record_type = 0
+		if(0 == $this->record_type) {
+			foreach($this->sollRoutesInd[0] AS $grade_id => $value) {
+				if(Routes_planningHelpersRoutes_planning::getGradeFilter($grade_id) ==  3) {$grade3  = $grade3  +$value;}
+				if(Routes_planningHelpersRoutes_planning::getGradeFilter($grade_id) ==  4) {$grade4  = $grade4  +$value;}
+				if(Routes_planningHelpersRoutes_planning::getGradeFilter($grade_id) ==  5) {$grade5  = $grade5  +$value;}
+				if(Routes_planningHelpersRoutes_planning::getGradeFilter($grade_id) ==  6) {$grade6  = $grade6  +$value;}
+				if(Routes_planningHelpersRoutes_planning::getGradeFilter($grade_id) ==  7) {$grade7  = $grade7  +$value;}
+				if(Routes_planningHelpersRoutes_planning::getGradeFilter($grade_id) ==  8) {$grade8  = $grade8  +$value;}
+				if(Routes_planningHelpersRoutes_planning::getGradeFilter($grade_id) ==  9) {$grade9  = $grade9  +$value;}
+				if(Routes_planningHelpersRoutes_planning::getGradeFilter($grade_id) == 10) {$grade10 = $grade10 +$value;}
+				if(Routes_planningHelpersRoutes_planning::getGradeFilter($grade_id) == 11) {$grade11 = $grade11 +$value;}
+				if(Routes_planningHelpersRoutes_planning::getGradeFilter($grade_id) == 12) {$grade12 = $grade12 +$value;}
+			}
+			$this->soll_routes_data = array($grade3,$grade4,$grade5,$grade6,$grade7,$grade8,$grade9,$grade10,$grade11,$grade12);
+			$this->totalsoll = array_sum($this->soll_routes_data); // Gesamtsummer des Soll-Bestandes
+			$this->soll_routes_data = json_encode($this->soll_routes_data);
+		}
+		// Soll-Bestand für Prozentwerte  record_type = 1
+		if(1 == $this->record_type) {
+			$this->soll_routes_data = array();
+			foreach($this->$gradeListShort as $grade) {
+				$grade = "grade$grade";
+				array_push($this->soll_routes_data, $this->SollRoutesPercentBuidling[0]->$grade);
+			}
+			$this->totalsoll = array_sum($this->soll_routes_data);
+			$this->soll_routes_data = json_encode($this->soll_routes_data);
+		}
 
 		/**
 		 * Routen Vorgemerkt zum herausschrauben
@@ -100,6 +121,7 @@ class Routes_planningViewPlannings extends \Joomla\CMS\MVC\View\HtmlView
 		 * Output JSON für Charts
 		*/
 		$this->routesComesOutGradeTotal = $this->get('RoutesComesOutGradeTotal');
+
 		$this->comes_out_routes_data = json_encode($this->routesComesOutGradeTotal[0]);
 
 		/**
@@ -119,24 +141,27 @@ class Routes_planningViewPlannings extends \Joomla\CMS\MVC\View\HtmlView
 
 
 		// Sollwerte abhängig von Auswahl Gebäude / Sektor -- Einzelwerte / Prozentwerte
-		if (1 == $this->record_sector_or_building) {
-            if(0 == $this->record_type) { 
-                 echo 'Gebäude Einzelwerterfassung fehlt'; // Gebäude Einzelwerterfassung
-            } else {
+		//if (1 == $this->record_sector_or_building) {
+          //  if(0 == $this->record_type) { 
+            //     echo 'Gebäude Einzelwerterfassung fehlt'; // Gebäude Einzelwerterfassung
+            //} else {
                 // Geböude Prozenterfassung
 				// JSON für Soll-Werte Erfassung als Prozentwerte/Gebäude (pb = percent building)
-				$sollgrade = [];
-				for ($i = $this->grade_start_percent; $i <= $this->grade_end_percent; $i++)
-				{
-					$soll = "grade$i";
-					$varname = 'soll_';
-					array_push($sollgrade,  $this->SollRoutesPercentBuidling[0]->$soll);
-				};
-					$this->totalsoll = array_sum($sollgrade);
-					$this->soll_routes_data = json_encode($sollgrade);
-            }; 
-        } else {
-            if(0 == $this->record_type) {
+			//	print_R($this->SollRoutesPercentBuidling);
+			//	$sollgrade = [];
+			//	for ($i = 3; $i <= 10; $i++)
+			//	{
+			//		$soll = "grade$i";
+			//		$varname = 'soll_';
+			//		array_push($sollgrade,  $this->SollRoutesPercentBuidling[0]->$soll);
+			//	};
+					//$this->totalsoll = array_sum($sollgrade);
+					//$this->soll_routes_data = json_encode($sollgrade);
+
+
+            //}; 
+        //} else {
+          //  if(0 == $this->record_type) {
                 // Sektor Einzelwerterfassung
 				// JSON für Soll-Werte Erfassung als Einzelwerte/ Sektoren
 
@@ -154,10 +179,10 @@ class Routes_planningViewPlannings extends \Joomla\CMS\MVC\View\HtmlView
 				 //echo 'JSON-Data für die Soll-Liste in Charts';
 
 
-            } else {
-                     echo 'Sektor Prozenterfassung fehlt '; // Sektor Prozenterfassung
-            };
-		}
+            //} else {
+              //       echo 'Sektor Prozenterfassung fehlt '; // Sektor Prozenterfassung
+           //};
+		//}
 
 		// Check for errors.
 		if (count($errors = $this->get('Errors')))
