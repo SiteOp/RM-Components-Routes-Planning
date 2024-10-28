@@ -58,11 +58,11 @@ $canEdit = Factory::getUser()->authorise('core.edit', 'com_act');
     <?php // Page-Header ?>
     <?php if ($menuparams['show_page_heading']) : ?>
         <div class="page-header">
-            <h1><?php echo $this->escape($menuparams['page_heading']); ?></h1> 
+            <h1><i class="fas fa-balance-scale"></i> <?php echo $this->escape($menuparams['page_heading']); ?></h1> 
         </div>
     <?php else : ?>
         <div class="page-header">
-            <h1><?php echo $this->escape($active->title); ?></h1>
+            <h1><i class="fas fa-balance-scale"></i> <?php echo $this->escape($active->title); ?></h1>
         </div>
     <?php endif; ?>
 
