@@ -1,270 +1,342 @@
 <?php
-
 /**
- * @version    CVS: 1.0.0
  * @package    Com_Routes_planning
- * @author     Birgit Gebhard <info@routes-manager.de>
- * @copyright  2021 Birgit Gebhard
- * @license    GNU General Public License Version 2 oder später; siehe LICENSE.txt
  */
-// No direct access
 defined('_JEXEC') or die;
 
-jimport('joomla.application.component.view');
+use Joomla\CMS\Factory;
 
-use \Joomla\CMS\Factory;
-use \Joomla\CMS\Language\Text;
-
-
-/**
- * View class for a list of Routes_planning.
- *
- * @since  1.6
- */
 class Routes_planningViewPlannings extends \Joomla\CMS\MVC\View\HtmlView
 {
-	protected $items;
+    protected $state;
+    protected $params;
 
-	protected $pagination;
+    // Daten aus dem Model
+    protected $sollRoutesInd;     // Objekt g{id} => int
+    protected $routesComesOut;    // [(object) comes_out_{id} => int]
+    protected $items;             // hier leer (Model liefert leere Liste)
 
-	protected $state;
+    // RAW
+    public $labels_raw = [];
+    public $ist_raw    = [];
+    public $soll_raw   = [];
+    public $vmg_raw    = [];
+    public $todo_raw   = [];
+    public $sumIst     = 0;
+    public $sumSoll    = 0;
+    public $sumVmg     = 0;
 
-	protected $params;
-	
+    // MERGED
+    public $labelsMerged = [];
+    public $istM  = [];
+    public $sollM = [];
+    public $vmgM  = [];
+    public $todoM = [];
 
-	/**
-	 * Display the view
-	 *
-	 * @param   string  $tpl  Template name
-	 *
-	 * @return void
-	 *
-	 * @throws Exception
-	 */
-	public function display($tpl = null)
-	{
-		$app = Factory::getApplication();
+    public function display($tpl = null)
+    {
+        $this->state  = $this->get('State');
+        $this->params = $this->state->get('params');
 
-		$this->state 		  = $this->get('State');
-		$this->items   		  = $this->get('Items'); // Ist-Bestand Status 1 + -1 
+        $this->filterForm     = $this->get('FilterForm');
+        $this->activeFilters  = $this->get('ActiveFilters');
 
-		$this->filterForm     = $this->get('FilterForm');
-		$this->activeFilters  = $this->get('ActiveFilters');
+        // Datenquellen (Model)
+        $this->items          = $this->get('Items');
+        $this->sollRoutesInd  = $this->get('SollRoutesInd');
+        $this->routesComesOut = $this->get('RoutesComesOut');
+        $this->replaceRoutes  = $this->get('ReplaceRoutes'); // Liste von Vorgemerkte Routen
 
-		$this->routesComesOut = $this->get('RoutesComesOut'); 
-		$this->routesComesOutTotal = $this->get('RoutesComesOutGradeTotal'); 
-		$this->replaceRoutes  = $this->get('ReplaceRoutes'); // Liste von Vorgemerkte Routen (Routenname, Linie, Sektor....)
+        $this->prepareGradesChartData();
 
-		$this->sollRoutesInd  = $this->get('SollRoutesInd'); // Individuell = Einzelwert
-		$this->SollRoutesPercentBuidling = $this->get('SollRoutesPercentBuidling');
+        if ($errors = $this->get('Errors')) {
+            throw new \Exception(implode("\n", $errors));
+        }
 
-		
-		// Params
-		$this->params 	   = $this->state->get('params');
-		$this->record_type = $this->params['record_type'];
-		$this->record_sector_or_building = $this->params['record_sector_or_building']; // Sollen die Sollwerte im Sektor oder Gebäude erfasst werden? 1=Gebäude 2=Sektor
+        // --- Tabelle: alle Grade einzeln, unabhÃ¤ngig vom Chart-Merge ---
+        \JLoader::import('helpers.grade', JPATH_SITE . '/components/com_act');
+        $allGrades = \GradeHelpersGrade::getSettergradeList(); // [{grade,id_grade}, ...]
 
-		// Import Helper aus ACT 
-		// JSON String der Grade
-		JLoader::import('helpers.grade', JPATH_SITE.DIRECTORY_SEPARATOR.'components'.DIRECTORY_SEPARATOR.'com_act');
-		$this->gradeList   = GradeHelpersGrade::getGradeListPlanning(); // JSON String der Grade
+        // Labels fÃ¼r die Tabelle
+        $this->tableLabels = [];
+        foreach ((array)$allGrades as $g) {
+            $this->tableLabels[] = is_object($g) ? (string)$g->grade : (string)$g['grade'];
+        }
+
+        // Helper: beliebige Quelle -> indexbasiertes Array
+        $toList = static function($src): array {
+            if ($src === null) return [];
+            if (is_array($src)) return array_values($src);
+            return array_values((array)$src); // stdClass
+        };
+
+        // Quelle wÃ¤hlen (bevorzugt RAW, sonst MERGED, sonst leer)
+        $srcSoll = $this->soll_raw ?? $this->sollM ?? [];
+        $srcIst  = $this->ist_raw  ?? $this->istM  ?? [];
+        $srcVmg  = $this->vmg_raw  ?? $this->vmgM  ?? [];
+
+        $listSoll = $toList($srcSoll);
+        $listIst  = $toList($srcIst);
+        $listVmg  = $toList($srcVmg);
+
+        $fullLen = count($this->tableLabels);
+
+        // Auf volle LÃ¤nge der Grade bringen (abschneiden/auffÃ¼llen)
+        $padTo = static function(array $arr, int $len): array {
+            $arr = array_slice($arr, 0, $len);
+            if (count($arr) < $len) $arr = array_pad($arr, $len, 0);
+            return array_map('intval', $arr);
+        };
+
+        $this->tableSoll = $padTo($listSoll, $fullLen);
+        $this->tableIst  = $padTo($listIst,  $fullLen);
+        $this->tableVmg  = $padTo($listVmg,  $fullLen);
+
+        // ToDo fÃ¼r Tabelle (ohne Deckelung; Darstellung -1/rot macht das Template falls gewÃ¼nscht)
+        $this->tableTodo = [];
+        for ($i = 0; $i < $fullLen; $i++) {
+            $raw = $this->tableSoll[$i] - $this->tableIst[$i] + $this->tableVmg[$i]; // Soll âˆ’ Ist + Vorg.
+            $this->tableTodo[$i] = $raw;
+        }
+
+        parent::display($tpl);
+    }
+
+    /**
+     * Chart-Daten strikt entlang GradeHelpersGrade::getSettergradeList()
+     */
+    protected function prepareGradesChartData()
+    {
+        // 0) Label-/ID-Liste aus Helper
+        \JLoader::import('helpers.grade', JPATH_SITE . '/components/com_act');
+        $setter = \GradeHelpersGrade::getSettergradeList(); // [{grade,id_grade}, ...]
+        $setter = is_array($setter) ? $setter : [];
+
+        $this->labels_raw = [];
+        $idList = [];
+        foreach ($setter as $row) {
+            $this->labels_raw[] = (string) ($row->grade ?? '');
+            $idList[]           = (int)    ($row->id_grade ?? 0);
+        }
+        // 0 (Unbekannt) anhÃ¤ngen
+        $this->labels_raw[] = '0';
+        $idList[] = 0;
+
+        // 1) IST (robust per DB, ID oder Text), Unknown separat
+        $params     = \JComponentHelper::getParams('com_act');
+        $gradeTable = $params['grade_table'];
+
+        $db = Factory::getDbo();
+
+        $q1 = $db->getQuery(true)
+            ->select($db->qn('g.id_grade', 'id_grade'))
+            ->select('COUNT(DISTINCT ' . $db->qn('a.id') . ') AS ' . $db->qn('totalroutes'))
+            ->from($db->qn('#__' . $gradeTable, 'g'))
+            ->join(
+                'LEFT',
+                $db->qn('#__act_trigger_calc', 't') . ' ON (' .
+                $db->qn('t.calc_grade_round') . ' = ' . $db->qn('g.id_grade') .
+                ' OR ' . $db->qn('t.calc_grade') . ' = ' . $db->qn('g.grade') . ')'
+            )
+            ->join(
+                'LEFT',
+                $db->qn('#__act_route', 'a') . ' ON ' .
+                $db->qn('a.id') . ' = ' . $db->qn('t.id') .
+                ' AND ' . $db->qn('a.state') . ' IN (1,-1)'
+            )
+            ->join('LEFT', $db->qn('#__act_line', 'l') . ' ON ' . $db->qn('l.id') . ' = ' . $db->qn('a.line'))
+            ->join('LEFT', $db->qn('#__act_sector', 's') . ' ON ' . $db->qn('s.id') . ' = ' . $db->qn('l.sector'))
+            ->group($db->qn('g.id_grade'));
+
+        $filterSector   = (array) ($this->state->get('filter.sector') ?? []);
+        $filterBuilding = (int)   ($this->state->get('filter.building') ?? 0);
+        if (!empty($filterSector)) {
+            \Joomla\Utilities\ArrayHelper::toInteger($filterSector);
+            $q1->where($db->qn('s.id') . ' IN (' . implode(',', $filterSector) . ')');
+        }
+        if ($filterBuilding > 0) {
+            $q1->where($db->qn('s.building') . ' = ' . (int) $filterBuilding);
+        }
+
+        $db->setQuery($q1);
+        $rows1 = (array) $db->loadAssocList();
+        $byIst = [];
+        foreach ($rows1 as $r) {
+            $byIst[(int) $r['id_grade']] = (int) $r['totalroutes'];
+        }
+
+        $q2 = $db->getQuery(true)
+            ->select('COUNT(DISTINCT ' . $db->qn('a2.id') . ') AS ' . $db->qn('cnt'))
+            ->from($db->qn('#__act_route', 'a2'))
+            ->join('INNER', $db->qn('#__act_trigger_calc', 't2') . ' ON ' . $db->qn('t2.id') . ' = ' . $db->qn('a2.id'))
+            ->join(
+                'LEFT',
+                $db->qn('#__' . $gradeTable, 'g2') . ' ON (' .
+                $db->qn('t2.calc_grade_round') . ' = ' . $db->qn('g2.id_grade') .
+                ' OR ' . $db->qn('t2.calc_grade') . ' = ' . $db->qn('g2.grade') . ')'
+            )
+            ->join('LEFT', $db->qn('#__act_line', 'l2') . ' ON ' . $db->qn('l2.id') . ' = ' . $db->qn('a2.line'))
+            ->join('LEFT', $db->qn('#__act_sector', 's2') . ' ON ' . $db->qn('s2.id') . ' = ' . $db->qn('l2.sector'))
+            ->where($db->qn('a2.state') . ' IN (1,-1)')
+            ->where($db->qn('g2.id_grade') . ' IS NULL');
+
+        if (!empty($filterSector)) {
+            $q2->where($db->qn('s2.id') . ' IN (' . implode(',', $filterSector) . ')');
+        }
+        if ($filterBuilding > 0) {
+            $q2->where($db->qn('s2.building') . ' = ' . (int) $filterBuilding);
+        }
+
+        $db->setQuery($q2);
+        $byIst[0] = (int) $db->loadResult();
+
+        $this->ist_raw = [];
+        foreach ($idList as $gid) {
+            $this->ist_raw[] = $byIst[$gid] ?? 0;
+        }
+
+        // 2) SOLL (Objekt g{id} => int)
+        if (!is_object($this->sollRoutesInd) || empty((array) $this->sollRoutesInd)) {
+            $this->sollRoutesInd = $this->get('SollRoutesInd');
+        }
+        $sollObj = is_object($this->sollRoutesInd) ? $this->sollRoutesInd : (object) [];
+        $this->soll_raw = [];
+        foreach ($idList as $gid) {
+            $this->soll_raw[] = (int) ($sollObj->{'g' . $gid} ?? 0);
+        }
+
+        // 3) VMG (comes_out_{id})
+        if (empty($this->routesComesOut) || !isset($this->routesComesOut[0])) {
+            $this->routesComesOut = $this->get('RoutesComesOut');
+        }
+        $vmgArr = isset($this->routesComesOut[0]) ? (array) $this->routesComesOut[0] : [];
+        $this->vmg_raw = [];
+        foreach ($idList as $gid) {
+            $this->vmg_raw[] = (int) ($vmgArr['comes_out_' . $gid] ?? 0);
+        }
+
+        // 4) Summen & ToDo  (ToDo jetzt ohne Clamping!)
+        $this->sumIst  = array_sum($this->ist_raw);
+        $this->sumSoll = array_sum($this->soll_raw);
+        $this->sumVmg  = array_sum($this->vmg_raw);
+
+        $this->todo_raw = [];
+        foreach ($this->soll_raw as $i => $s) {
+            $t = $this->ist_raw[$i] ?? 0;
+            $v = $this->vmg_raw[$i] ?? 0;
+            $this->todo_raw[$i] = ($s - $t + $v); //  Soll âˆ’ Ist + Vorgemerkt
+        }
 
 
-		// Liste der zusammengefassten Routengrade aus [3, 3+, 4-...] wird [3,4]
-		foreach($this->gradeList as $value) {
-   			$gradeListShort[] = intval($value->grade);
-		}
-		$this->$gradeListShort = array_unique($gradeListShort);
+        // ===================================================================
+        // MERGE-SCHEMA: Lade dynamisches Schema aus Datenbank
+        // ===================================================================
+        // Die getMergeScheme() Funktion liest aus der Grade-Tabelle:
+        // - alle Grades mit routes_planning=1 und merge_group IS NOT NULL
+        // - gruppiert nach merge_group
+        // Ergebnis: ["5b/5b+" => ["5b", "5b+"], "6a/6a+" => ["6a", "6a+"], ...]
+        \JLoader::import('helpers.grade', JPATH_SITE . '/components/com_act');
+        $mergeScheme = \GradeHelpersGrade::getMergeScheme();
 
-		###################### CHARTS ###########################
-		/**
-		 * Soll-Bestand Total
-		 * Soll-Bestand aus Sektoren kommt mit grade_id3, grade_id4
-		 * Anhand des Filters für die jeweilige grade_id wird dann die Summe 
-		 * des Soll-Bestandes des Totalen-Grade berechnet
-		 * Anschließend wird ein neues Array erstellt
-		 * Output JSON für Charts
-		*/
+        // Fallback fuer leeres Schema oder wenn getMergeScheme() fehlschlaegt
+        if (empty($mergeScheme)) {
+            $mergeScheme = [];
+        }
 
-		// Sollbestand Einzelwerte record_type = 0
-		if(0 == $this->record_type) {
-			foreach($this->sollRoutesInd[0] AS $grade_id => $value) {
-				if(Routes_planningHelpersRoutes_planning::getGradeFilter($grade_id) ==  3) {$grade3  = $grade3  +$value;}
-				if(Routes_planningHelpersRoutes_planning::getGradeFilter($grade_id) ==  4) {$grade4  = $grade4  +$value;}
-				if(Routes_planningHelpersRoutes_planning::getGradeFilter($grade_id) ==  5) {$grade5  = $grade5  +$value;}
-				if(Routes_planningHelpersRoutes_planning::getGradeFilter($grade_id) ==  6) {$grade6  = $grade6  +$value;}
-				if(Routes_planningHelpersRoutes_planning::getGradeFilter($grade_id) ==  7) {$grade7  = $grade7  +$value;}
-				if(Routes_planningHelpersRoutes_planning::getGradeFilter($grade_id) ==  8) {$grade8  = $grade8  +$value;}
-				if(Routes_planningHelpersRoutes_planning::getGradeFilter($grade_id) ==  9) {$grade9  = $grade9  +$value;}
-				if(Routes_planningHelpersRoutes_planning::getGradeFilter($grade_id) == 10) {$grade10 = $grade10 +$value;}
-				if(Routes_planningHelpersRoutes_planning::getGradeFilter($grade_id) == 11) {$grade11 = $grade11 +$value;}
-				if(Routes_planningHelpersRoutes_planning::getGradeFilter($grade_id) == 12) {$grade12 = $grade12 +$value;}
-			}
-			$this->soll_routes_data = array($grade3,$grade4,$grade5,$grade6,$grade7,$grade8,$grade9,$grade10,$grade11,$grade12);
-			$this->totalsoll = array_sum($this->soll_routes_data); // Gesamtsummer des Soll-Bestandes
-			$this->soll_routes_data = json_encode($this->soll_routes_data);
-		}
-		// Soll-Bestand für Prozentwerte  record_type = 1
-		if(1 == $this->record_type) {
-			$this->soll_routes_data = array();
-			foreach($this->$gradeListShort as $grade) {
-				$grade = "grade$grade";
-				array_push($this->soll_routes_data, $this->SollRoutesPercentBuidling[0]->$grade);
-			}
-			$this->totalsoll = array_sum($this->soll_routes_data);
-			$this->soll_routes_data = json_encode($this->soll_routes_data);
-		}
+        // Index fuer schnellen Lookup: label => position in labels_raw
+        $rawIndex = array_flip(array_values($this->labels_raw));
 
-		/**
-		 * Routen Vorgemerkt zum herausschrauben
-		 * Zusammengefasst auf ganze Grade 
-		 * Output JSON für Charts
-		*/
-		$this->routesComesOutGradeTotal = $this->get('RoutesComesOutGradeTotal');
+        // ===================================================================
+        // EINZELNE GRADES: Ergaenze Grades ohne merge_group zum Schema
+        // ===================================================================
+        // Alle RAW-Labels, die nicht in einer merge_group sind, 
+        // werden als 1:1 Mapping hinzugefuegt (z.B. "4a" => ["4a"])
+        $covered = [];
+        foreach ($mergeScheme as $mergeLabel => $sourceLabels) {
+            foreach ($sourceLabels as $src) { 
+                $covered[$src] = true; 
+            }
+        }
+        
+        foreach ($this->labels_raw as $label) {
+            if (!isset($covered[$label])) {
+                $mergeScheme[$label] = [$label];
+            }
+        }
 
-		$this->comes_out_routes_data = json_encode($this->routesComesOutGradeTotal[0]);
+        // ===================================================================
+        // SORTIERUNG: Nach Schwierigkeit (Position in labels_raw)
+        // ===================================================================
+        // Das Merge-Schema wird nach der niedrigsten Position der Source-Labels
+        // sortiert, damit die Merge-Ansicht die Grades in aufsteigender
+        // Schwierigkeit zeigt (wie in der RAW-Ansicht)
+        $schemeOrder = [];
+        foreach ($mergeScheme as $mergeLabel => $sourceLabels) {
+            $minPos = PHP_INT_MAX;
+            foreach ($sourceLabels as $src) {
+                if (isset($rawIndex[$src])) {
+                    $minPos = min($minPos, $rawIndex[$src]);
+                }
+            }
+            // Nur Merge-Labels aufnehmen, deren Source-Labels existieren
+            if ($minPos < PHP_INT_MAX) {
+                $schemeOrder[$mergeLabel] = $minPos;
+            }
+        }
+        
+        // Sortiere nach Position (aufsteigend)
+        asort($schemeOrder);
 
-		/**
-		 * Routen Ist-Bestand 
-		 * Zusammengefasst auf ganze Grade
-		 * Output JSON für Charts
-		*/
-		$this->routesIstGradeTotal = $this->get('RoutesIstGradeTotal'); 
-		$this->ist_routes_data = json_encode($this->routesIstGradeTotal[0]);
+        // ===================================================================
+        // MERGED-DATEN: Aggregiere Werte nach Schema
+        // ===================================================================
+        $this->labelsMerged = [];
+        $this->sollM = [];
+        $this->istM  = [];
+        $this->vmgM  = [];
+        $this->todoM = [];
 
-		/**
-		 * JSON für Label (Grad wird innerhalb Charts hinzugefügt
-		*/ 
-		$label_grade   = GradeHelpersGrade::getRoutesgradeFilter(); 
-		array_push($label_grade, 0); // Fügt den Grad 0 (undefiniert hinzu)
-		$this->label_grade = json_encode($label_grade);
+        // Helper-Funktion: Summiere Werte fuer alle Source-Labels einer Gruppe
+        $sumSourceLabels = function (array $sourceLabels, array $rawData) use ($rawIndex) {
+            $sum = 0;
+            foreach ($sourceLabels as $srcLabel) {
+                if (isset($rawIndex[$srcLabel])) {
+                    $idx = $rawIndex[$srcLabel];
+                    $sum += (int) ($rawData[$idx] ?? 0);
+                }
+            }
+            return $sum;
+        };
 
+        // Durchlaufe sortiertes Schema und aggregiere Daten
+        foreach ($schemeOrder as $mergeLabel => $position) {
+            $sourceLabels = $mergeScheme[$mergeLabel];
+            
+            $this->labelsMerged[] = $mergeLabel;
+            
+            $sollSum = $sumSourceLabels($sourceLabels, $this->soll_raw);
+            $istSum  = $sumSourceLabels($sourceLabels, $this->ist_raw);
+            $vmgSum  = $sumSourceLabels($sourceLabels, $this->vmg_raw);
+            
+            $this->sollM[] = $sollSum;
+            $this->istM[]  = $istSum;
+            $this->vmgM[]  = $vmgSum;
+            $this->todoM[] = ($sollSum - $istSum + $vmgSum); // Soll - Ist + Vorgemerkt (ohne Clamping)
+        }
 
-		// Sollwerte abhängig von Auswahl Gebäude / Sektor -- Einzelwerte / Prozentwerte
-		//if (1 == $this->record_sector_or_building) {
-          //  if(0 == $this->record_type) { 
-            //     echo 'Gebäude Einzelwerterfassung fehlt'; // Gebäude Einzelwerterfassung
-            //} else {
-                // Geböude Prozenterfassung
-				// JSON für Soll-Werte Erfassung als Prozentwerte/Gebäude (pb = percent building)
-			//	print_R($this->SollRoutesPercentBuidling);
-			//	$sollgrade = [];
-			//	for ($i = 3; $i <= 10; $i++)
-			//	{
-			//		$soll = "grade$i";
-			//		$varname = 'soll_';
-			//		array_push($sollgrade,  $this->SollRoutesPercentBuidling[0]->$soll);
-			//	};
-					//$this->totalsoll = array_sum($sollgrade);
-					//$this->soll_routes_data = json_encode($sollgrade);
+        // --- Aliase fÃ¼r Templates, damit Tabelle exakt die Chart-Gruppierung nutzt ---
+        $this->labelsM = $this->labelsMerged;   // Tabellen-Labels = Chart-Merged-Labels
+        $this->sollM   = array_values($this->sollM);
+        $this->istM    = array_values($this->istM);
+        $this->vmgM    = array_values($this->vmgM);
+        // $this->todoM ist bereits korrekt (ohne Clamping)
+    }
 
-
-            //}; 
-        //} else {
-          //  if(0 == $this->record_type) {
-                // Sektor Einzelwerterfassung
-				// JSON für Soll-Werte Erfassung als Einzelwerte/ Sektoren
-
-
-
-				//$sollgrade = [];
-				// foreach($gradeList as $value){
-				//	$soll = "grade$value->id_grade"; 
-				//	$varname = 'soll_';
-				//	array_push($sollgrade,  $this->sollRoutesInd[0]->$soll);
-				// }
-
-				// $this->totalsoll = array_sum($sollgrade);
-				// $this->soll_routes_data = json_encode($sollgrade);
-				 //echo 'JSON-Data für die Soll-Liste in Charts';
-
-
-            //} else {
-              //       echo 'Sektor Prozenterfassung fehlt '; // Sektor Prozenterfassung
-           //};
-		//}
-
-		// Check for errors.
-		if (count($errors = $this->get('Errors')))
-		{
-			throw new Exception(implode("\n", $errors));
-		}
-
-		$this->_prepareDocument();
-		parent::display($tpl);
-	}
-
-
-
-
-	/**
-	 * Prepares the document
-	 *
-	 * @return void
-	 *
-	 * @throws Exception
-	 */
-	protected function _prepareDocument()
-	{
-		$app   = Factory::getApplication();
-		$menus = $app->getMenu();
-		$title = null;
-
-		// Because the application sets a default page title,
-		// we need to get it from the menu item itself
-		$menu = $menus->getActive();
-
-		if ($menu)
-		{
-			$this->params->def('page_heading', $this->params->get('page_title', $menu->title));
-		}
-		else
-		{
-			$this->params->def('page_heading', Text::_('COM_ROUTES_PLANNING_DEFAULT_PAGE_TITLE'));
-		}
-
-		$title = $this->params->get('page_title', '');
-
-		if (empty($title))
-		{
-			$title = $app->get('sitename');
-		}
-		elseif ($app->get('sitename_pagetitles', 0) == 1)
-		{
-			$title = Text::sprintf('JPAGETITLE', $app->get('sitename'), $title);
-		}
-		elseif ($app->get('sitename_pagetitles', 0) == 2)
-		{
-			$title = Text::sprintf('JPAGETITLE', $title, $app->get('sitename'));
-		}
-
-		$this->document->setTitle($title);
-
-		if ($this->params->get('menu-meta_description'))
-		{
-			$this->document->setDescription($this->params->get('menu-meta_description'));
-		}
-
-		if ($this->params->get('menu-meta_keywords'))
-		{
-			$this->document->setMetadata('keywords', $this->params->get('menu-meta_keywords'));
-		}
-
-		if ($this->params->get('robots'))
-		{
-			$this->document->setMetadata('robots', $this->params->get('robots'));
-		}
-	}
-
-	/**
-	 * Check if state is set
-	 *
-	 * @param   mixed  $state  State
-	 *
-	 * @return bool
-	 */
-	public function getState($state)
-	{
-		return isset($this->state->{$state}) ? $this->state->{$state} : false;
-	}
+    /**
+     * KompatibilitÃ¤ts-Helfer â€“ erlaubt $this->getState('filter.building') im Template
+     */
+    public function getState($key)
+    {
+        return isset($this->state->$key) ? $this->state->$key : null;
+    }
 }

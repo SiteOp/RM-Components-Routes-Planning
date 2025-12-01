@@ -1,0 +1,210 @@
+
+/* Pagination Ausrichtung */
+div.dt-container div.dt-layout-row,
+div.dt-container div.dt-layout-row div.dt-layout-cell {
+  display: inline!important;}
+  .paging_simple_numbers { justify-content: flex-end !important; display: flex !important; margin: 16px 0 ;}
+
+
+/* ========================================
+   Chart Container
+   ======================================== */
+.chart-outer {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border: 1px solid var(--card-border);
+  border-radius: 8px;
+  margin-top: 20px;
+  background: var(--card-bg);
+}
+
+.chart-inner {
+  min-height: 400px;
+  padding: 10px;
+  position: relative;
+}
+
+canvas {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/* ========================================
+   Chart Control Buttons
+   ======================================== */
+.chart-controls {
+  margin: 1rem 0;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.chart-controls .btn {
+  transition: all 0.2s ease;
+}
+
+.chart-controls .btn.active,
+.chart-controls .btn[aria-pressed="true"] {
+  background-color: #007bff;
+  color: #fff;
+  border-color: #007bff;
+}
+
+.chart-controls .btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* ========================================
+   DataTables Custom Styling
+   ======================================== */
+
+/* PageLength (Zeilen anzeigen) */
+.dataTables_wrapper .dataTables_length {
+  float: left;
+  margin-bottom: 10px;
+}
+
+.dataTables_wrapper .dataTables_length label {
+  font-weight: normal;
+  margin: 0;
+}
+
+/* Text "Zeilen anzeigen" und "Einträge" verstecken */
+.dataTables_wrapper .dataTables_length label {
+  font-size: 0; /* Versteckt den Text */
+}
+
+.dataTables_wrapper .dataTables_length select {
+  font-size: 14px; /* Select behält normale Schriftgröße */
+  display: inline-block;
+  width: auto;
+  margin: 0;
+  padding: 5px 10px;
+}
+
+/* Buttons Container */
+.dt-buttons {
+  margin-bottom: 10px;
+  display: inline-flex;
+  gap: 5px;
+  float: right;
+}
+
+/* Clearfix für Top-Row */
+.dataTables_wrapper .row:first-child::after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+/* (disabled for DataTables default pagination)
+/* Pagination Styling - Bootstrap 4 kompatibel */
+.dataTables_wrapper .dataTables_paginate {
+  text-align: right;
+  padding-top: 15px;
+}
+
+/* (disabled for DataTables default pagination)
+.dataTables_wrapper .dataTables_paginate .pagination {
+  margin: 0;
+  justify-content: flex-end;
+}
+*/
+
+
+*//* Table Responsive Wrapper */
+.table-responsive {
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* ========================================
+   Progress Bars
+   ======================================== */
+.progress {
+  height: 8px;
+  border-radius: 4px;
+  background-color: #e9ecef;
+  overflow: hidden;
+}
+
+.progress-bar {
+  transition: width 0.6s ease;
+}
+
+/* ========================================
+   Mobile Optimizations
+   ======================================== */
+@media (max-width: 640px) {
+  .summary {
+    flex-direction: column;
+  }
+
+  .card {
+    flex: 1 1 100%;
+  }
+
+  .big {
+    font-size: 20px;
+  }
+
+  .chart-inner {
+    min-height: 360px;
+    padding: 5px;
+  }
+
+  .chart-controls {
+    flex-direction: column;
+  }
+
+  .chart-controls .btn {
+    width: 100%;
+  }
+
+  .dt-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+  }
+
+  .dt-button {
+    flex: 1 1 calc(50% - 5px);
+    margin: 0 !important;
+  }
+}
+
+/* ========================================
+   Print Styles
+   ======================================== */
+@media print {
+  .chart-controls,
+  .dt-buttons,
+  .dt-search {
+    display: none !important;
+  }
+
+  .chart-outer {
+    border: 1px solid #000;
+  }
+
+  .card {
+    page-break-inside: avoid;
+  }
+}
+
+
+
+.dataTables_wrapper .dt-top { margin-bottom: .5rem; }
+.dataTables_wrapper .dt-tools { text-align: right; }
+.dataTables_wrapper .dt-tools .dt-buttons { display: inline-block; vertical-align: middle; }
+.dataTables_wrapper .dt-tools .dataTables_filter { display: inline-block; margin-left: 1rem; vertical-align: middle; }
+
+/* --- DataTables Tools (Legacy DOM) --- */
+.dataTables_wrapper .dt-top { margin-bottom: .5rem; }
+.dataTables_wrapper .dt-tools { text-align: right; }
+.dataTables_wrapper .dt-tools .dt-buttons { display: inline-block; vertical-align: middle; }
+.dataTables_wrapper .dt-tools .dataTables_filter { display: inline-block; margin-left: 1rem; vertical-align: middle; }
