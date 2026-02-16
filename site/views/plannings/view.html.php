@@ -134,9 +134,8 @@ class Routes_planningViewPlannings extends \Joomla\CMS\MVC\View\HtmlView
             ->from($db->qn('#__' . $gradeTable, 'g'))
             ->join(
                 'LEFT',
-                $db->qn('#__act_trigger_calc', 't') . ' ON (' .
-                $db->qn('t.calc_grade_round') . ' = ' . $db->qn('g.id_grade') .
-                ' OR ' . $db->qn('t.calc_grade') . ' = ' . $db->qn('g.grade') . ')'
+                $db->qn('#__act_trigger_calc', 't') . ' ON ' .
+                $db->qn('t.calc_grade_round') . ' = ' . $db->qn('g.id_grade')
             )
             ->join(
                 'LEFT',
